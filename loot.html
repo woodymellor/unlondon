@@ -1,0 +1,2522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Viking Collectables & Loot</title>
+
+<style>
+*{box-sizing:border-box}
+
+:root{
+    --bg:#0c0f10;
+    --panel:#171b1d;
+    --panel2:#202527;
+    --gold:#c9a34e;
+    --gold2:#e2c16b;
+    --text:#eee;
+    --muted:#92999b;
+    --border:#49433a;
+    --common:#aaa;
+    --uncommon:#63c77b;
+    --rare:#5ca8ff;
+    --epic:#bd6cff;
+    --veryrare:#ff7f50;
+    --legendary:#e5ad3e;
+}
+
+body{
+    margin:0;
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 50% -10%,#455057 0,#202628 32%,#0c0f10 70%);
+    color:var(--text);
+    font-family:Georgia,"Times New Roman",serif;
+}
+
+.container{
+    width:min(1200px,94%);
+    margin:30px auto;
+}
+
+header{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+h1{
+    color:var(--gold2);
+    font-size:clamp(32px,6vw,58px);
+    margin:0;
+    text-shadow:3px 3px #000;
+}
+
+header p{
+    color:var(--muted);
+    font-style:italic;
+}
+
+.panel{
+    background:rgba(23,27,29,.97);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:20px;
+    box-shadow:0 15px 45px #0008;
+    margin-bottom:18px;
+}
+
+.controls{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:12px;
+}
+
+label{
+    display:block;
+    color:var(--gold2);
+    font-weight:bold;
+    margin-bottom:6px;
+}
+
+input,select{
+    width:100%;
+    padding:11px;
+    background:#0e1112;
+    border:1px solid #555;
+    border-radius:6px;
+    color:white;
+    font-family:inherit;
+    font-size:15px;
+}
+
+button{
+    border:1px solid #a8873f;
+    background:#806127;
+    color:#fff;
+    padding:12px 16px;
+    border-radius:6px;
+    font-family:inherit;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#a17c31;
+}
+
+.button-row{
+    display:flex;
+    gap:10px;
+    margin-top:15px;
+    flex-wrap:wrap;
+}
+
+.button-row button{
+    flex:1;
+    min-width:160px;
+}
+
+.item-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+    gap:12px;
+}
+
+.item{
+    background:#121617;
+    border:1px solid #3c4142;
+    border-left:5px solid var(--common);
+    border-radius:8px;
+    padding:15px;
+}
+
+.item.common{border-left-color:var(--common)}
+.item.uncommon{border-left-color:var(--uncommon)}
+.item.rare{border-left-color:var(--rare)}
+.item.very-rare{border-left-color:var(--veryrare)}
+.item.epic{border-left-color:var(--epic)}
+.item.legendary{border-left-color:var(--legendary)}
+
+.item h3{
+    margin:0 0 4px;
+    font-size:20px;
+}
+
+.meta{
+    color:#888;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.value{
+    color:#e8c45e;
+    font-weight:bold;
+    margin-top:8px;
+}
+
+.description{
+    color:#bbb;
+    font-size:14px;
+    line-height:1.4;
+    margin-top:8px;
+}
+
+.materials{
+    margin-top:10px;
+    padding-top:9px;
+    border-top:1px solid #303536;
+    color:#aaa;
+    font-size:13px;
+}
+
+.material{
+    display:inline-block;
+    background:#272c2d;
+    border-radius:4px;
+    padding:3px 7px;
+    margin:3px 3px 0 0;
+}
+
+.badge{
+    float:right;
+    font-size:11px;
+    text-transform:uppercase;
+    font-weight:bold;
+}
+
+.common .badge{color:var(--common)}
+.uncommon .badge{color:var(--uncommon)}
+.rare .badge{color:var(--rare)}
+.very-rare .badge{color:var(--veryrare)}
+.epic .badge{color:var(--epic)}
+.legendary .badge{color:var(--legendary)}
+
+.empty{
+    padding:35px;
+    text-align:center;
+    color:#777;
+    border:1px dashed #444;
+    border-radius:8px;
+}
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:#000b;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:10;
+}
+
+.modal.open{display:flex}
+
+.modal-box{
+    width:min(650px,100%);
+    max-height:90vh;
+    overflow:auto;
+    background:#191d1f;
+    border:1px solid #806b3c;
+    border-radius:12px;
+    padding:25px;
+}
+
+.close{
+    float:right;
+    background:#333;
+    border-color:#555;
+}
+
+.loot-result{
+    margin-bottom:12px;
+    padding:15px;
+    background:#101314;
+    border-radius:7px;
+    border-left:5px solid var(--gold);
+}
+
+#status{
+    color:#888;
+    margin:12px 0;
+    font-size:13px;
+}
+
+footer{
+    text-align:center;
+    color:#555;
+    padding:20px;
+    font-size:12px;
+}
+
+@media(max-width:600px){
+    .container{width:96%}
+    .panel{padding:14px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+    <h1>⚔ Viking Collectables ⚔</h1>
+    <p>Treasure, weapons, relics and the spoils of England</p>
+</header>
+
+
+<!-- =========================================================
+     SEARCH / FILTERS
+     ========================================================= -->
+
+<div class="panel">
+
+    <div class="controls">
+
+        <div>
+            <label>Search</label>
+            <input id="search" type="search"
+                   placeholder="Search items..."
+                   oninput="renderItems()">
+        </div>
+
+        <div>
+            <label>Category</label>
+            <select id="category" onchange="renderItems()">
+                <option value="all">All Categories</option>
+            </select>
+        </div>
+
+        <div>
+            <label>Rarity</label>
+            <select id="rarity" onchange="renderItems()">
+                <option value="all">All Rarities</option>
+                <option value="common">Common</option>
+                <option value="uncommon">Uncommon</option>
+                <option value="rare">Rare</option>
+                <option value="very-rare">Very Rare</option>
+                <option value="epic">Epic</option>
+                <option value="legendary">Legendary</option>
+            </select>
+        </div>
+
+        <div>
+            <label>Sort</label>
+            <select id="sort" onchange="renderItems()">
+                <option value="name">Name</option>
+                <option value="value-low">Value: Low → High</option>
+                <option value="value-high">Value: High → Low</option>
+                <option value="rarity">Rarity</option>
+            </select>
+        </div>
+
+    </div>
+
+    <div id="status"></div>
+
+    <div class="button-row">
+
+        <button onclick="generateLoot()">
+            🎲 Generate Loot
+        </button>
+
+        <button onclick="showRandomTreasure()">
+            💰 Random Treasure
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     ITEM DATABASE
+     ========================================================= -->
+
+<div class="panel">
+
+    <div id="items" class="item-grid"></div>
+
+</div>
+
+
+<footer>
+    Viking TTRPG Collectables Generator
+</footer>
+
+</div>
+
+
+<!-- =========================================================
+     ITEM MODAL
+     ========================================================= -->
+
+<div id="modal" class="modal">
+
+    <div class="modal-box">
+
+        <button class="close" onclick="closeModal()">Close</button>
+
+        <div id="modalContent"></div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* ============================================================
+   DATABASE
+   ============================================================
+
+   This is the main part you can customise.
+
+   Every item contains:
+
+   name
+   category
+   rarity
+   value
+   materials
+   description
+
+   You can add new items simply by copying an object.
+
+   Ship-related items have deliberately NOT been included.
+
+   ============================================================ */
+
+
+/* ------------------------------------------------------------
+   MATERIAL VALUES
+   ------------------------------------------------------------ */
+
+const materialValues = {
+
+    "Iron Ore": 1,
+    "Leather": 1,
+    "Fabric": 2,
+    "Wood": 1,
+    "Bone": 2,
+    "Cloth": 2,
+    "Glass": 3,
+    "Herbs": 2,
+    "Grain": 1,
+    "Salt": 2,
+    "Iron": 4,
+    "Carbon Ingot": 150,
+    "Nickel Ingot": 250,
+    "Tungsten Ingot": 350,
+    "Titanium": 30,
+
+    /* TTRPG additions */
+
+    "Silver": 1,
+    "Silver Ingot": 200,
+    "Pure Silver": 500,
+    "Gold": 10,
+    "Gemstone": 100,
+    "Amber": 25,
+    "Bone Charm": 8,
+    "Rune Stone": 40
+
+};
+
+
+/* ------------------------------------------------------------
+   ITEMS
+   ------------------------------------------------------------ */
+
+const items = [
+
+/* ============================================================
+   WEAPONS
+   ============================================================ */
+
+["Fyrd Axe","Weapons","common",35,
+ {"Iron":3,"Wood":2,"Leather":1},
+ "A practical axe carried by a common fyrd warrior."],
+
+["Housecarl's Axe","Weapons","uncommon",90,
+ {"Iron":6,"Wood":2,"Leather":1},
+ "A heavier axe suitable for a seasoned warrior."],
+
+["Raider Axe","Weapons","common",45,
+ {"Iron":4,"Wood":2},
+ "A well-used raiding axe."],
+
+["Tusk Axe","Weapons","rare",180,
+ {"Iron":7,"Bone":2,"Leather":1},
+ "An axe decorated with carved tusk."],
+
+["Varin's Axe","Weapons","rare",220,
+ {"Iron":8,"Wood":2,"Leather":1},
+ "A finely made Viking axe."],
+
+["Drengiligr","Weapons","epic",400,
+ {"Iron":10,"Wood":2,"Silver":20},
+ "A weapon worthy of a legendary warrior."],
+
+["Hundtoth","Weapons","uncommon",100,
+ {"Iron":4,"Leather":2,"Bone":1},
+ "A compact fighting dagger."],
+
+["Kopis","Weapons","rare",180,
+ {"Iron":6,"Leather":1},
+ "A curved blade of foreign design."],
+
+["Mōdraniht Ceremonial Seax","Weapons","rare",250,
+ {"Iron":5,"Silver":20,"Cloth":1},
+ "A ceremonial seax associated with winter festivities."],
+
+["Suttungr's Claw","Weapons","epic",500,
+ {"Iron":10,"Silver":30,"Bone":2},
+ "An ornate and fearsome blade."],
+
+["Yngling Seax","Weapons","uncommon",120,
+ {"Iron":5,"Leather":1},
+ "A finely balanced seax."],
+
+["Blacksmith's Hammer","Weapons","uncommon",85,
+ {"Iron":7,"Wood":2},
+ "A heavy blacksmith's hammer."],
+
+["Mjolnir","Weapons","legendary",5000,
+ {"Iron":20,"Silver":100,"Rune Stone":5},
+ "A legendary hammer associated with Thor."],
+
+["Ohkwá:ri Club","Weapons","uncommon",80,
+ {"Wood":5,"Bone":2},
+ "A sturdy club from Vinland."],
+
+["War Hammer","Weapons","common",70,
+ {"Iron":5,"Wood":2},
+ "A simple but effective war hammer."],
+
+["Iron-Star","Weapons","uncommon",90,
+ {"Iron":6,"Leather":1},
+ "A brutal flail."],
+
+["Soldier's Flail","Weapons","common",55,
+ {"Iron":4,"Leather":2},
+ "A military flail."],
+
+["Spinning-Death","Weapons","rare",200,
+ {"Iron":8,"Leather":2},
+ "A dangerous flail built for sweeping attacks."],
+
+["Aella's Bardiche","Weapons","rare",260,
+ {"Iron":10,"Wood":3},
+ "A long polearm."],
+
+["Battle Sparth","Weapons","rare",230,
+ {"Iron":9,"Wood":3},
+ "A powerful Danish-style axe."],
+
+["Bone-Biter","Weapons","uncommon",110,
+ {"Iron":5,"Bone":2,"Wood":2},
+ "A vicious axe."],
+
+["Dwarven Axe","Weapons","epic",600,
+ {"Iron":12,"Silver":30,"Gemstone":1},
+ "An extravagant axe of dwarven design."],
+
+["Hemming's Axe","Weapons","rare",240,
+ {"Iron":9,"Wood":2,"Leather":1},
+ "A well-balanced battle axe."],
+
+["Lagertha's Axe","Weapons","epic",550,
+ {"Iron":10,"Silver":30,"Leather":1},
+ "A weapon named for a legendary shieldmaiden."],
+
+["Sepulcher Axe","Weapons","epic",650,
+ {"Iron":11,"Bone":2,"Silver":40},
+ "A dark ceremonial axe."],
+
+["Vordr's Bite","Weapons","rare",300,
+ {"Iron":9,"Bone":2},
+ "A savage-looking axe."],
+
+["Anéntaks Spear","Weapons","uncommon",120,
+ {"Iron":5,"Wood":3},
+ "A spear from Vinland."],
+
+["Bannermen's Spear","Weapons","rare",220,
+ {"Iron":7,"Wood":3,"Cloth":1},
+ "A decorated ceremonial spear."],
+
+["Cadfarch Spear","Weapons","rare",240,
+ {"Iron":8,"Wood":3},
+ "A well-made spear."],
+
+["Fafnir's Fang","Weapons","rare",350,
+ {"Iron":9,"Bone":2,"Silver":15},
+ "A legendary-looking spear."],
+
+["Fyrd Spear","Weapons","common",40,
+ {"Iron":3,"Wood":3},
+ "A basic spear."],
+
+["Gungnir","Weapons","legendary",5000,
+ {"Iron":20,"Silver":100,"Rune Stone":5},
+ "A divine spear associated with Odin."],
+
+["Carolingian Longsword","Weapons","uncommon",160,
+ {"Iron":7,"Leather":1},
+ "A Frankish longsword."],
+
+["Doubehander","Weapons","rare",260,
+ {"Iron":10,"Wood":2},
+ "A massive two-handed sword."],
+
+["Excalibur","Weapons","legendary",4500,
+ {"Iron":15,"Silver":100,"Gemstone":3},
+ "A legendary sword of Britain."],
+
+["Royal Sword","Weapons","epic",750,
+ {"Iron":12,"Silver":50,"Gemstone":1},
+ "A finely decorated royal blade."],
+
+["Saint George's Holy Sword","Weapons","epic",800,
+ {"Iron":12,"Silver":50,"Rune Stone":2},
+ "A holy sword associated with Saint George."],
+
+
+/* ============================================================
+   SILVER WEAPONS — TTRPG ADDITIONS
+   ============================================================ */
+
+["Silver Dagger","Silver Weapons","very-rare",650,
+ {"Silver Ingot":2,"Leather":1},
+ "A finely forged silver dagger. Particularly effective against supernatural creatures."],
+
+["Silver Seax","Silver Weapons","very-rare",900,
+ {"Silver Ingot":3,"Leather":1},
+ "A silver seax made for hunting creatures of the night."],
+
+["Silver Axe","Silver Weapons","very-rare",1300,
+ {"Silver Ingot":5,"Wood":2,"Leather":1},
+ "A heavy silver-edged axe."],
+
+["Silver Sword","Silver Weapons","very-rare",1800,
+ {"Silver Ingot":7,"Leather":1,"Cloth":1},
+ "A beautiful silver sword designed to harm supernatural foes."],
+
+["Silver Spear","Silver Weapons","very-rare",1500,
+ {"Silver Ingot":6,"Wood":3},
+ "A long silver spear."],
+
+["Silver Warhammer","Silver Weapons","very-rare",1600,
+ {"Silver Ingot":6,"Wood":2},
+ "A brutal silver hammer."],
+
+["Moon-Silver Longsword","Silver Weapons","legendary",3500,
+ {"Pure Silver":5,"Silver Ingot":3,"Gemstone":1},
+ "A legendary blade that gleams beneath moonlight."],
+
+
+/* ============================================================
+   SHIELDS
+   ============================================================ */
+
+["Blodwulf","Shields","rare",250,
+ {"Wood":5,"Iron":4,"Leather":2},
+ "A sturdy decorated shield."],
+
+["Briton Shield","Shields","common",55,
+ {"Wood":4,"Iron":2,"Leather":1},
+ "A practical British shield."],
+
+["Drekar Shied","Shields","uncommon",100,
+ {"Wood":5,"Iron":2,"Leather":2},
+ "A carved dragon-themed shield."],
+
+["Gorgon Shield","Shields","epic",500,
+ {"Wood":5,"Iron":5,"Silver":20},
+ "A striking shield bearing a monstrous emblem."],
+
+["Helgi's Shield","Shields","rare",260,
+ {"Wood":5,"Iron":4,"Leather":2},
+ "A decorated warrior's shield."],
+
+["Hrafn Guard","Shields","uncommon",100,
+ {"Wood":4,"Iron":3,"Leather":1},
+ "A raven-themed shield."],
+
+["Mōdraniht Ceremonial Shield","Shields","rare",300,
+ {"Wood":5,"Iron":3,"Silver":15,"Cloth":1},
+ "A ceremonial shield."],
+
+["Raven Clan Shield","Shields","common",60,
+ {"Wood":4,"Iron":2,"Leather":1},
+ "A basic Raven Clan shield."],
+
+["Shishi Guard","Shields","epic",450,
+ {"Wood":5,"Iron":5,"Gemstone":1},
+ "A beautifully decorated shield."],
+
+["Slepnir Shield","Shields","rare",280,
+ {"Wood":5,"Iron":4,"Leather":2},
+ "A shield decorated with a legendary horse."],
+
+["Spartan Shield","Shields","epic",400,
+ {"Wood":5,"Iron":5,"Bronze":1},
+ "A heavy round shield inspired by Spartan warriors."],
+
+["The Morrigan's Guard","Shields","epic",550,
+ {"Wood":5,"Iron":6,"Bone":2,"Silver":15},
+ "A dark and imposing shield."],
+
+["Kite Shield","Shields","common",65,
+ {"Wood":5,"Iron":2,"Leather":2},
+ "A simple kite shield."],
+
+["Kraken Shield","Shields","epic",500,
+ {"Wood":5,"Iron":5,"Leather":3,"Bone":2},
+ "A shield decorated with a sea monster."],
+
+["Oaken Kite Shield","Shields","common",50,
+ {"Wood":7,"Iron":1},
+ "A sturdy oak shield."],
+
+["Plank and Buckler","Shields","common",45,
+ {"Wood":5,"Iron":2},
+ "A crude but serviceable shield."],
+
+["Royal Guard","Shields","rare",250,
+ {"Wood":5,"Iron":5,"Cloth":1},
+ "A shield carried by royal guards."],
+
+["Rune Shield","Shields","epic",600,
+ {"Wood":5,"Iron":5,"Rune Stone":3},
+ "A shield marked with protective runes."],
+
+["Saint George's Tower Shield","Shields","epic",600,
+ {"Wood":6,"Iron":6,"Silver":20},
+ "A large defensive shield."],
+
+["Sarcophagus Shield","Shields","rare",350,
+ {"Wood":5,"Iron":4,"Bone":2},
+ "A dark shield decorated with funerary imagery."],
+
+
+/* ============================================================
+   BOWS
+   ============================================================ */
+
+["Arc of Elan","Weapons","rare",220,
+ {"Wood":5,"Leather":2},
+ "A finely crafted hunting bow."],
+
+["Death-Speaker","Weapons","rare",300,
+ {"Wood":5,"Bone":2,"Leather":2},
+ "A sinister bow."],
+
+["Dokkalfar Bow","Weapons","epic",650,
+ {"Wood":5,"Silver":20,"Leather":2},
+ "An elegant supernatural-looking bow."],
+
+["Hunnish Bow","Weapons","common",70,
+ {"Wood":4,"Leather":2},
+ "A compact composite bow."],
+
+["Magmar Hunting Bow","Weapons","uncommon",130,
+ {"Wood":5,"Leather":2},
+ "A practical hunting bow."],
+
+["Nodens' Arc","Weapons","legendary",1800,
+ {"Wood":6,"Silver":50,"Rune Stone":3},
+ "A mysterious legendary bow."],
+
+["Onà:kara Bow","Weapons","uncommon",130,
+ {"Wood":5,"Leather":2},
+ "A bow from Vinland."],
+
+["Sagittarius Bow","Weapons","rare",300,
+ {"Wood":5,"Leather":2,"Silver":10},
+ "A finely balanced bow."],
+
+["Death-Skald","Weapons","rare",280,
+ {"Wood":5,"Bone":1,"Leather":2},
+ "A dark bow."],
+
+["Hunbeorht's Bow","Weapons","uncommon",130,
+ {"Wood":5,"Leather":2},
+ "A well-made hunting bow."],
+
+["Iron-Cloud","Weapons","rare",300,
+ {"Wood":5,"Iron":3,"Leather":2},
+ "A sturdy war bow."],
+
+["Skadi's Wrath","Weapons","epic",700,
+ {"Wood":6,"Silver":20,"Leather":2},
+ "A bow associated with the winter hunt."],
+
+["Spartan Bow","Weapons","rare",300,
+ {"Wood":5,"Leather":2,"Iron":1},
+ "A bow inspired by Greek warfare."],
+
+["Viper Bow","Weapons","uncommon",150,
+ {"Wood":5,"Leather":2,"Bone":1},
+ "A fast and dangerous bow."],
+
+["Bullseye","Weapons","rare",280,
+ {"Wood":5,"Leather":2},
+ "A precision hunting bow."],
+
+["Longbow","Weapons","common",80,
+ {"Wood":6,"Leather":1},
+ "A simple longbow."],
+
+["Needler","Weapons","rare",300,
+ {"Wood":5,"Leather":2,"Iron":2},
+ "A finely made predator bow."],
+
+["Petra's Arc","Weapons","epic",700,
+ {"Wood":6,"Leather":2,"Bone":1},
+ "A masterfully crafted hunting bow."],
+
+["Recurve Bow","Weapons","uncommon",130,
+ {"Wood":5,"Leather":2},
+ "A compact recurve bow."],
+
+["The Mark of Sol","Weapons","epic",650,
+ {"Wood":6,"Silver":20,"Leather":2},
+ "A beautifully decorated bow."],
+
+
+/* ============================================================
+   ARMOUR
+   ============================================================ */
+
+["Arenhare'kó:wa Cloak","Armour","rare",250,
+ {"Cloth":4,"Leather":2},
+ "A decorated cloak from Vinland."],
+
+["Brigandine Cape","Armour","uncommon",150,
+ {"Cloth":4,"Leather":3,"Iron":2},
+ "A reinforced cape."],
+
+["Einherjar Hood","Armour","epic",450,
+ {"Cloth":4,"Leather":2,"Silver":10},
+ "A dramatic warrior's hood."],
+
+["Galloglach Cape","Armour","rare",250,
+ {"Cloth":5,"Leather":2},
+ "A heavy warrior's cape."],
+
+["Hearthweru Hood","Armour","uncommon",120,
+ {"Cloth":4,"Leather":2},
+ "A practical hood."],
+
+["Hidden Ones' Hood","Armour","rare",300,
+ {"Cloth":4,"Leather":3},
+ "A discreet assassin's hood."],
+
+["Huntsman Cloak","Armour","uncommon",140,
+ {"Cloth":4,"Leather":3},
+ "A hunter's cloak."],
+
+["Magister's Cloak","Armour","rare",280,
+ {"Cloth":5,"Leather":2},
+ "A scholarly and elegant cloak."],
+
+["Mentor's Cloak","Armour","epic",500,
+ {"Cloth":5,"Leather":3,"Silver":15},
+ "A fine cloak belonging to a seasoned mentor."],
+
+["Mōdraniht Ceremonial Cape","Armour","rare",280,
+ {"Cloth":5,"Silver":15},
+ "A festive ceremonial cape."],
+
+["Raven Clan Cloak","Armour","common",100,
+ {"Cloth":3,"Leather":2},
+ "A basic Raven Clan cloak."],
+
+["Saint George's Cape","Armour","epic",450,
+ {"Cloth":5,"Leather":2,"Silver":20},
+ "A richly decorated military cloak."],
+
+["Thegn's Cloak","Armour","rare",350,
+ {"Cloth":5,"Leather":3,"Silver":10},
+ "A nobleman's cloak."],
+
+["Thor's Cape","Armour","legendary",1200,
+ {"Cloth":6,"Leather":3,"Silver":40,"Rune Stone":2},
+ "A legendary cloak."],
+
+["Arenhare'kó:wa Headgear","Armour","rare",180,
+ {"Cloth":3,"Leather":1},
+ "Vinland headgear."],
+
+["Brigandine Helm","Armour","uncommon",120,
+ {"Iron":3,"Leather":2},
+ "A reinforced helmet."],
+
+["Einherjar Helm","Armour","epic",400,
+ {"Iron":4,"Leather":2,"Silver":10},
+ "An ornate warrior's helm."],
+
+["Galloglach Helm","Armour","rare",250,
+ {"Iron":4,"Leather":2},
+ "A heavy military helm."],
+
+["Hidden Ones' Mask","Armour","rare",300,
+ {"Leather":3,"Cloth":1},
+ "A concealed assassin's mask."],
+
+["Huntsman Helm","Armour","uncommon",100,
+ {"Leather":2,"Iron":2},
+ "A practical hunting helmet."],
+
+["Magister's Mask","Armour","rare",250,
+ {"Leather":2,"Cloth":2},
+ "An elaborate mask."],
+
+["Mentor's Mask","Armour","epic",450,
+ {"Leather":3,"Silver":10},
+ "A finely crafted mask."],
+
+["Mōdraniht Ceremonial Headress","Armour","rare",250,
+ {"Cloth":3,"Silver":10},
+ "Ceremonial winter headwear."],
+
+["Raven Clan Helmet","Armour","common",80,
+ {"Iron":2,"Leather":1},
+ "A simple Viking helmet."],
+
+["Saint George's Great Helm","Armour","epic",500,
+ {"Iron":5,"Silver":20},
+ "A large decorated great helm."],
+
+["Thegn's Great Helm","Armour","rare",350,
+ {"Iron":5,"Leather":2,"Silver":10},
+ "A noble warrior's helm."],
+
+["Thor's Helmet","Armour","legendary",1000,
+ {"Iron":5,"Silver":50,"Rune Stone":2},
+ "A legendary helmet."],
+
+["Altair's Outfit","Armour","epic",650,
+ {"Cloth":5,"Leather":3,"Silver":20},
+ "An exotic assassin's outfit."],
+
+["Arenhare'kó:wa Outfit","Armour","rare",400,
+ {"Cloth":5,"Leather":3},
+ "A complete Vinland outfit."],
+
+["Bayek's Outfit","Armour","epic",700,
+ {"Cloth":5,"Leather":3,"Silver":20},
+ "An outfit inspired by an ancient warrior."],
+
+["Brigandine Armour","Armour","uncommon",250,
+ {"Iron":5,"Leather":5,"Cloth":2},
+ "Reinforced battlefield armour."],
+
+["Einherjar Armour","Armour","epic",650,
+ {"Iron":6,"Leather":4,"Cloth":3,"Silver":20},
+ "Ornate warrior armour."],
+
+["Galloglach Armour","Armour","rare",450,
+ {"Iron":6,"Leather":5,"Cloth":2},
+ "Heavy warrior armour."],
+
+["Hidden Ones' Robes","Armour","rare",400,
+ {"Cloth":5,"Leather":3},
+ "Discreet assassin robes."],
+
+["Huntsman Armour","Armour","uncommon",220,
+ {"Leather":6,"Cloth":2},
+ "Practical hunting armour."],
+
+["Magister's Robes","Armour","rare",400,
+ {"Cloth":6,"Leather":2},
+ "Fine scholarly robes."],
+
+["Mentor's Robes","Armour","epic",600,
+ {"Cloth":6,"Leather":3,"Silver":20},
+ "Elegant robes belonging to a master."],
+
+["Merchant Blouse","Armour","common",70,
+ {"Cloth":3},
+ "An ordinary blouse."],
+
+["Mōdraniht Ceremonial Robe","Armour","rare",350,
+ {"Cloth":6,"Silver":15},
+ "A festive ceremonial robe."],
+
+["Raven Clan Armour","Armour","common",180,
+ {"Leather":5,"Cloth":2,"Iron":2},
+ "Basic Raven Clan armour."],
+
+["Saint George's Armour","Armour","epic",750,
+ {"Iron":7,"Leather":5,"Cloth":3,"Silver":25},
+ "Richly decorated military armour."],
+
+["Thegn's Heavy Tunic","Armour","rare",500,
+ {"Cloth":5,"Leather":5,"Iron":3,"Silver":10},
+ "A noble warrior's tunic."],
+
+["Thor's Battle Plate","Armour","legendary",1500,
+ {"Iron":8,"Leather":5,"Silver":60,"Rune Stone":3},
+ "A legendary suit of battle armour."],
+
+["Thrall's Tunic","Armour","common",40,
+ {"Cloth":3},
+ "Simple work clothing."],
+
+["Arenhare'kó:wa Bracers","Armour","rare",120,
+ {"Leather":2,"Cloth":1},
+ "Vinland bracers."],
+
+["Brigandine Gauntlets","Armour","uncommon",100,
+ {"Iron":2,"Leather":2},
+ "Reinforced gauntlets."],
+
+["Einherjar Bracers","Armour","epic",250,
+ {"Iron":2,"Leather":2,"Silver":5},
+ "Ornate bracers."],
+
+["Galloglach Bracers","Armour","rare",180,
+ {"Iron":2,"Leather":2},
+ "Heavy warrior bracers."],
+
+["Hidden Ones' Gloves","Armour","rare",160,
+ {"Leather":2,"Cloth":1},
+ "Assassin's gloves."],
+
+["Huntsman Vambraces","Armour","uncommon",100,
+ {"Leather":2,"Iron":1},
+ "Hunter's arm protection."],
+
+["Magister's Vambraces","Armour","rare",160,
+ {"Leather":2,"Cloth":1},
+ "Fine vambraces."],
+
+["Mentor's Vambrace","Armour","epic",220,
+ {"Leather":2,"Iron":2,"Silver":5},
+ "A finely crafted vambrace."],
+
+["Mōdraniht Ceremonial Bracers","Armour","rare",180,
+ {"Leather":2,"Silver":5},
+ "Festive bracers."],
+
+["Raven Clan Bracers","Armour","common",70,
+ {"Leather":2},
+ "Simple leather bracers."],
+
+["Saint George's Bracers","Armour","epic",220,
+ {"Iron":2,"Leather":2,"Silver":5},
+ "Decorated military bracers."],
+
+["Thegn's Bracers","Armour","rare",170,
+ {"Iron":2,"Leather":2,"Silver":5},
+ "Noble warrior bracers."],
+
+["Thor's Gauntlets","Armour","legendary",500,
+ {"Iron":4,"Leather":2,"Silver":20,"Rune Stone":1},
+ "Legendary gauntlets."],
+
+["Arenhare'kó:wa Pants","Armour","rare",120,
+ {"Cloth":2,"Leather":2},
+ "Vinland trousers."],
+
+["Brigandine Trousers","Armour","uncommon",140,
+ {"Cloth":3,"Leather":3,"Iron":1},
+ "Reinforced trousers."],
+
+["Einherjar Pants","Armour","epic",250,
+ {"Cloth":3,"Leather":2,"Silver":5},
+ "Ornate trousers."],
+
+["Galloglach Trousers","Armour","rare",220,
+ {"Cloth":3,"Leather":3},
+ "Heavy warrior trousers."],
+
+["Hidden Ones' Leggings","Armour","rare",180,
+ {"Cloth":3,"Leather":2},
+ "Assassin leggings."],
+
+["Huntsman Breeches","Armour","uncommon",100,
+ {"Cloth":2,"Leather":2},
+ "Hunter's breeches."],
+
+["Magister's Trousers","Armour","rare",160,
+ {"Cloth":3,"Leather":2},
+ "Fine trousers."],
+
+["Mentor's Trousers","Armour","epic",230,
+ {"Cloth":3,"Leather":2,"Silver":5},
+ "Master's trousers."],
+
+["Merchant Trousers","Armour","common",60,
+ {"Cloth":3},
+ "Ordinary merchant clothing."],
+
+["Mōdraniht Ceremonial Trousers","Armour","rare",180,
+ {"Cloth":3,"Silver":5},
+ "Festive trousers."],
+
+["Raven Clan Breeches","Armour","common",60,
+ {"Cloth":2,"Leather":1},
+ "Simple breeches."],
+
+["Saint George's Trousers","Armour","epic",280,
+ {"Cloth":3,"Leather":3,"Silver":10},
+ "Fine military trousers."],
+
+["Thegn's Breeches","Armour","rare",180,
+ {"Cloth":3,"Leather":2,"Silver":5},
+ "Noble breeches."],
+
+["Thor's Breeches","Armour","legendary",400,
+ {"Cloth":3,"Leather":3,"Silver":15,"Rune Stone":1},
+ "Legendary breeches."],
+
+["Thrall's Breeches","Armour","common",35,
+ {"Cloth":2},
+ "Simple work breeches."],
+
+
+/* ============================================================
+   HAIR / BEARD / TATTOOS
+   ============================================================ */
+
+["Classic Hair - Blond","Cosmetics","common",10,
+ {"Cloth":0},"A traditional Viking hairstyle."],
+
+["Classic Hair - Dark Brown","Cosmetics","common",10,
+ {"Cloth":0},"A traditional hairstyle."],
+
+["Classic Hair - Light Brown","Cosmetics","common",10,
+ {"Cloth":0},"A traditional hairstyle."],
+
+["Classic Hair - Red","Cosmetics","common",10,
+ {"Cloth":0},"A traditional hairstyle."],
+
+["Exotic Hair - Blonde","Cosmetics","uncommon",20,
+ {"Cloth":0},"An unusual hairstyle."],
+
+["Exotic Hair - Dark Brown","Cosmetics","uncommon",20,
+ {"Cloth":0},"An unusual hairstyle."],
+
+["Exotic Hair - Light Brown","Cosmetics","uncommon",20,
+ {"Cloth":0},"An unusual hairstyle."],
+
+["Exotic Hair - Red","Cosmetics","uncommon",20,
+ {"Cloth":0},"An unusual hairstyle."],
+
+["Fancy Hair - Blonde","Cosmetics","uncommon",25,
+ {"Cloth":0},"A fashionable hairstyle."],
+
+["Fancy Hair - Dark Brown","Cosmetics","uncommon",25,
+ {"Cloth":0},"A fashionable hairstyle."],
+
+["Fancy Hair - Light Brown","Cosmetics","uncommon",25,
+ {"Cloth":0},"A fashionable hairstyle."],
+
+["Fancy Hair - Red","Cosmetics","uncommon",25,
+ {"Cloth":0},"A fashionable hairstyle."],
+
+["Flower Hair - Blonde","Cosmetics","rare",40,
+ {"Cloth":1},"Hair decorated for a festival."],
+
+["Flower Hair - Dark Brown","Cosmetics","rare",40,
+ {"Cloth":1},"Hair decorated for a festival."],
+
+["Flower Hair - Light Brown","Cosmetics","rare",40,
+ {"Cloth":1},"Hair decorated for a festival."],
+
+["Flower Hair - Red","Cosmetics","rare",40,
+ {"Cloth":1},"Hair decorated for a festival."],
+
+["Original Hair - Blonde","Cosmetics","common",10,
+ {"Cloth":0},"A simple hairstyle."],
+
+["Original Hair - Dark Brown","Cosmetics","common",10,
+ {"Cloth":0},"A simple hairstyle."],
+
+["Original Hair - Light Brown","Cosmetics","common",10,
+ {"Cloth":0},"A simple hairstyle."],
+
+["Original Hair - Red","Cosmetics","common",10,
+ {"Cloth":0},"A simple hairstyle."],
+
+["Savage Hair - Blonde","Cosmetics","uncommon",20,
+ {"Cloth":0},"A wild hairstyle."],
+
+["Savage Hair - Dark Brown","Cosmetics","uncommon",20,
+ {"Cloth":0},"A wild hairstyle."],
+
+["Savage Hair - Light Brown","Cosmetics","uncommon",20,
+ {"Cloth":0},"A wild hairstyle."],
+
+["Savage Hair - Red","Cosmetics","uncommon",20,
+ {"Cloth":0},"A wild hairstyle."],
+
+["Shaved - Blond","Cosmetics","common",5,
+ {"Cloth":0},"A shaved hairstyle."],
+
+["Shaved - Dark Brown","Cosmetics","common",5,
+ {"Cloth":0},"A shaved hairstyle."],
+
+["Shaved - Light Brown","Cosmetics","common",5,
+ {"Cloth":0},"A shaved hairstyle."],
+
+["Shaved - Red","Cosmetics","common",5,
+ {"Cloth":0},"A shaved hairstyle."],
+
+["Bald","Cosmetics","common",5,
+ {"Cloth":0},"A completely bald head."],
+
+["Classic Beard","Cosmetics","common",10,
+ {"Cloth":0},"A traditional beard."],
+
+["Combed Beard","Cosmetics","common",15,
+ {"Cloth":0},"A neatly maintained beard."],
+
+["Exotic Beard","Cosmetics","uncommon",20,
+ {"Cloth":0},"An unusual beard style."],
+
+["Fancy Beard","Cosmetics","uncommon",25,
+ {"Cloth":0},"An elaborate beard."],
+
+["Flower Beard","Cosmetics","rare",35,
+ {"Cloth":0},"A festival decoration."],
+
+["Original Beard","Cosmetics","common",10,
+ {"Cloth":0},"A traditional beard."],
+
+["Shaved Beard","Cosmetics","common",5,
+ {"Cloth":0},"A clean-shaven face."],
+
+["Stubble","Cosmetics","common",5,
+ {"Cloth":0},"Short stubble."],
+
+
+/* ============================================================
+   TATTOOS
+   ============================================================ */
+
+["Auki Sign","Tattoo","uncommon",35,
+ {"Ink":1},"A decorative Norse tattoo design."],
+
+["Cross Face","Tattoo","rare",60,
+ {"Ink":1},"A cross-shaped facial tattoo."],
+
+["Donsk","Tattoo","uncommon",35,
+ {"Ink":1},"A decorative tattoo."],
+
+["Draugr","Tattoo","rare",70,
+ {"Ink":1},"A tattoo depicting the undead."],
+
+["Dupuytren Emblem","Tattoo","uncommon",40,
+ {"Ink":1},"A distinctive emblem."],
+
+["Dvergar Pattern","Tattoo","rare",60,
+ {"Ink":1},"A dwarven-inspired pattern."],
+
+["Fierce","Tattoo","common",25,
+ {"Ink":1},"A simple fierce-looking tattoo."],
+
+["God Hand","Tattoo","rare",70,
+ {"Ink":1},"A striking hand tattoo."],
+
+["Gothic","Tattoo","rare",60,
+ {"Ink":1},"A dark decorative tattoo."],
+
+["Gungnir Strike","Tattoo","epic",120,
+ {"Ink":1,"Silver":5},"A tattoo depicting Odin's spear."],
+
+["Hati's Blessing","Tattoo","rare",80,
+ {"Ink":1},"A wolf-themed tattoo."],
+
+["Hel Sign","Tattoo","rare",80,
+ {"Ink":1},"A mark associated with Hel."],
+
+["Hjarta","Tattoo","uncommon",40,
+ {"Ink":1},"A heart-shaped Norse design."],
+
+["Huginn Call","Tattoo","rare",70,
+ {"Ink":1},"A raven-themed tattoo."],
+
+["Hulder's Mark","Tattoo","rare",70,
+ {"Ink":1},"A mysterious woodland mark."],
+
+["Jomsviking","Tattoo","uncommon",40,
+ {"Ink":1},"A mark of the legendary Jomsvikings."],
+
+["Jörmungandr","Tattoo","epic",120,
+ {"Ink":1,"Silver":5},"A tattoo depicting the World Serpent."],
+
+["Lugh","Tattoo","rare",70,
+ {"Ink":1},"A Celtic-inspired design."],
+
+["Midgard","Tattoo","rare",70,
+ {"Ink":1},"A map-like Norse design."],
+
+["Mimir","Tattoo","epic",100,
+ {"Ink":1,"Rune Stone":1},"A design inspired by Mimir."],
+
+["Mjolnir Sign","Tattoo","epic",100,
+ {"Ink":1,"Silver":5},"A hammer-shaped tattoo."],
+
+["Mōdraniht","Tattoo","rare",60,
+ {"Ink":1},"A festive design."],
+
+["Muninn Call","Tattoo","rare",70,
+ {"Ink":1},"A raven-themed tattoo."],
+
+["Norse Emblem","Tattoo","common",30,
+ {"Ink":1},"A simple Norse emblem."],
+
+["Odin Emblem","Tattoo","epic",120,
+ {"Ink":1,"Silver":5},"An emblem of Odin."],
+
+["Ostara","Tattoo","rare",60,
+ {"Ink":1},"A spring festival design."],
+
+["Raven Guard","Tattoo","uncommon",40,
+ {"Ink":1},"A Raven Clan design."],
+
+["Raven Shadow","Tattoo","uncommon",40,
+ {"Ink":1},"A dark raven tattoo."],
+
+["Raven Watch","Tattoo","common",30,
+ {"Ink":1},"A simple raven design."],
+
+["Sigrdrifumal","Tattoo","epic",110,
+ {"Ink":1,"Silver":5},"A mystical Norse design."],
+
+["Skratii","Tattoo","rare",70,
+ {"Ink":1},"A beast-inspired tattoo."],
+
+["Skrælingi Emblem","Tattoo","rare",60,
+ {"Ink":1},"A Vinland-inspired emblem."],
+
+["Speki Symbol","Tattoo","uncommon",45,
+ {"Ink":1},"A symbolic Norse design."],
+
+["Tyr Bravery","Tattoo","epic",100,
+ {"Ink":1,"Silver":5},"A tattoo honouring Tyr."],
+
+["Valhalla Blessing","Tattoo","epic",100,
+ {"Ink":1,"Silver":5},"A warrior's blessing."],
+
+["Vegvisir","Tattoo","epic",120,
+ {"Ink":1,"Rune Stone":1},"A magical-looking compass symbol."],
+
+["Vestri Wind","Tattoo","rare",60,
+ {"Ink":1},"A wind-themed design."],
+
+["Vidarr","Tattoo","epic",100,
+ {"Ink":1,"Silver":5},"A design associated with Vidarr."],
+
+["Viking Strike","Tattoo","uncommon",40,
+ {"Ink":1},"A warrior's tattoo."],
+
+["Warrior Tears","Tattoo","rare",70,
+ {"Ink":1},"A sombre warrior design."],
+
+["Ymir Scream","Tattoo","epic",100,
+ {"Ink":1,"Rune Stone":1},"A design associated with Ymir."],
+
+
+/* ============================================================
+   MOUNTS / RAVENS
+   ============================================================ */
+
+["Abelard","Mount","rare",300,
+ {"Leather":8,"Cloth":2},"A well-bred horse."],
+
+["Angelus Mortis","Mount","epic",700,
+ {"Leather":8,"Cloth":3,"Silver":20},"A striking dark mount."],
+
+["Dvalinn","Mount","epic",700,
+ {"Leather":8,"Cloth":3,"Silver":20},"An exotic horse."],
+
+["Fiendish","Mount","rare",400,
+ {"Leather":8,"Cloth":2},"A fierce-looking horse."],
+
+["Fortitude","Mount","rare",400,
+ {"Leather":8,"Cloth":2},"A strong warhorse."],
+
+["Gluttony","Mount","uncommon",250,
+ {"Leather":7,"Cloth":2},"A sturdy horse."],
+
+["Gringolet","Mount","rare",350,
+ {"Leather":8,"Cloth":2},"A fine horse."],
+
+["Hati","Mount","legendary",1000,
+ {"Leather":8,"Cloth":3,"Silver":50},"A supernatural wolf-like mount."],
+
+["Helhest","Mount","epic",750,
+ {"Leather":8,"Cloth":3,"Silver":20},"A deathly-looking horse."],
+
+["Hreinn","Mount","rare",300,
+ {"Leather":7,"Cloth":2},"A dependable mount."],
+
+["Lebryt","Mount","uncommon",200,
+ {"Leather":7,"Cloth":2},"A common riding horse."],
+
+["Llamrei","Mount","rare",350,
+ {"Leather":8,"Cloth":2},"A noble horse."],
+
+["Parsifal","Mount","rare",350,
+ {"Leather":8,"Cloth":2},"A fine riding horse."],
+
+["Passelande","Mount","rare",300,
+ {"Leather":7,"Cloth":2},"A sturdy horse."],
+
+["Pomers","Mount","common",120,
+ {"Leather":6,"Cloth":1},"A simple local horse."],
+
+["Pride","Mount","uncommon",220,
+ {"Leather":7,"Cloth":2},"A strong horse."],
+
+["Prudence","Mount","uncommon",220,
+ {"Leather":7,"Cloth":2},"A reliable horse."],
+
+["Svadilfari","Mount","epic",700,
+ {"Leather":8,"Cloth":3,"Silver":20},"An exotic supernatural horse."],
+
+["Tencendur","Mount","rare",350,
+ {"Leather":8,"Cloth":2},"A warhorse."],
+
+["Tribal Stallion","Mount","rare",350,
+ {"Leather":8,"Cloth":2},"A powerful stallion."],
+
+["Warhorse","Mount","rare",400,
+ {"Leather":8,"Cloth":2,"Iron":1},"A trained warhorse."],
+
+["Wrath","Mount","epic",600,
+ {"Leather":8,"Cloth":3,"Silver":15},"A fearsome mount."],
+
+["Albino Raven","Raven","rare",150,
+ {"Bone":1},"An unusually pale raven."],
+
+["Bald Eagle","Raven","epic",400,
+ {"Leather":1,"Silver":10},"A magnificent bird."],
+
+["Black and White Raven","Raven","common",50,
+ {"Bone":1},"A striking raven."],
+
+["Blood Eagle","Raven","rare",150,
+ {"Bone":1,"Silver":5},"A particularly fierce raven."],
+
+["Blue Shades Raven","Raven","uncommon",80,
+ {"Bone":1},"A raven with unusual colouring."],
+
+["Colourful Raven","Raven","rare",100,
+ {"Bone":1,"Cloth":1},"A brightly coloured bird."],
+
+["Falcon","Raven","uncommon",100,
+ {"Bone":1,"Leather":1},"A trained hunting bird."],
+
+["Savage Raven","Raven","uncommon",80,
+ {"Bone":1},"A fierce raven."],
+
+["Synin","Raven","common",40,
+ {"Bone":1},"A trusted Viking raven."],
+
+["White Senu","Raven","epic",300,
+ {"Bone":1,"Silver":10},"An exotic white bird."],
+
+
+/* ============================================================
+   JOMSVIKINGS
+   ============================================================ */
+
+["Birna","Jomsviking","rare",300,
+ {"Leather":3,"Iron":2},"A skilled warrior."],
+
+["Bjorn","Jomsviking","epic",500,
+ {"Leather":4,"Iron":3,"Silver":10},"A formidable berserker."],
+
+["Fyl","Jomsviking","uncommon",180,
+ {"Leather":3,"Iron":1},"A capable warrior."],
+
+["Hermod","Jomsviking","rare",300,
+ {"Leather":3,"Iron":2},"A seasoned raider."],
+
+["Hrefna","Jomsviking","rare",300,
+ {"Leather":3,"Iron":2},"A capable shieldmaiden."],
+
+["Revna","Jomsviking","rare",300,
+ {"Leather":3,"Iron":2},"A skilled warrior."],
+
+["Rollo","Jomsviking","epic",500,
+ {"Leather":4,"Iron":3,"Silver":10},"A powerful warrior."],
+
+["Skarde","Jomsviking","rare",300,
+ {"Leather":3,"Iron":2},"A seasoned raider."],
+
+["Sten","Jomsviking","rare",300,
+ {"Leather":3,"Iron":2},"A sturdy warrior."],
+
+["Valtar","Jomsviking","rare",300,
+ {"Leather":3,"Iron":2},"A skilled fighter."],
+
+["Yrsa","Jomsviking","uncommon",180,
+ {"Leather":3,"Iron":1},"A capable warrior."],
+
+
+/* ============================================================
+   SETTLEMENT DECORATIONS
+   ============================================================ */
+
+["Berserker's Rest","Decoration","rare",180,
+ {"Wood":5,"Cloth":1},"A rugged settlement decoration."],
+
+["Blooming Tree","Decoration","common",50,
+ {"Wood":4},"A decorative tree."],
+
+["Gallows Tree","Decoration","uncommon",80,
+ {"Wood":5},"A grim tree decoration."],
+
+["Hangman's Tree","Decoration","uncommon",80,
+ {"Wood":5},"A sinister settlement decoration."],
+
+["Mossy Faced Tree","Decoration","rare",100,
+ {"Wood":4,"Moss":2},"A peculiar decorative tree."],
+
+["Mossy Tree","Decoration","common",45,
+ {"Wood":4,"Moss":1},"A simple tree decoration."],
+
+["Sage Tree","Decoration","uncommon",70,
+ {"Wood":4,"Herbs":2},"A decorative tree."],
+
+["White & Red Tree","Decoration","uncommon",70,
+ {"Wood":4,"Cloth":1},"A colourful tree decoration."],
+
+["Yule Beech Tree","Decoration","rare",100,
+ {"Wood":5,"Cloth":2},"A festive tree."],
+
+["Archery Target","Decoration","common",20,
+ {"Wood":3,"Cloth":1},"A target for practicing archery."],
+
+["Asgardian Lamp","Decoration","rare",120,
+ {"Iron":2,"Glass":2},"An ornate lamp."],
+
+["Berserker Bear Totem","Decoration","rare",120,
+ {"Wood":4,"Bone":2},"A carved bear totem."],
+
+["Berserker's Arsenal","Decoration","rare",180,
+ {"Wood":3,"Iron":3},"A decorative weapon display."],
+
+["Berserker's Practice","Decoration","uncommon",100,
+ {"Wood":4,"Leather":1},"A training decoration."],
+
+["Blooming Statue","Decoration","uncommon",80,
+ {"Stone":3,"Cloth":1},"A decorative statue."],
+
+["Blue Dragon Effigy","Decoration","rare",130,
+ {"Wood":4,"Cloth":1},"A dragon effigy."],
+
+["Bountiful Tree","Decoration","uncommon",70,
+ {"Wood":4},"A decorative tree."],
+
+["Celtic Mossy Tombstone","Decoration","rare",120,
+ {"Stone":5,"Moss":2},"A weathered tombstone."],
+
+["Cozy Fire Pit","Decoration","common",35,
+ {"Stone":4,"Wood":2},"A simple fire pit."],
+
+["Dark Cross Tombstone","Decoration","uncommon",70,
+ {"Stone":5},"A dark tombstone."],
+
+["Guardian Carving","Decoration","rare",100,
+ {"Wood":4},"A carved guardian figure."],
+
+["Hallowed Monolith","Decoration","epic",300,
+ {"Stone":8,"Rune Stone":1},"A mysterious sacred stone."],
+
+["Hunter's Tombstone","Decoration","uncommon",70,
+ {"Stone":5},"A hunter's grave marker."],
+
+["Hunter's Well","Decoration","common",40,
+ {"Stone":5},"A settlement well."],
+
+["Iron Brazier","Decoration","uncommon",70,
+ {"Iron":5},"A metal brazier."],
+
+["Martial Runestone","Decoration","rare",180,
+ {"Stone":4,"Rune Stone":2},"A carved runestone."],
+
+["Mead Barrel","Decoration","common",25,
+ {"Wood":4},"A barrel of mead."],
+
+["Odin Wooden Statue","Decoration","rare",120,
+ {"Wood":5},"A carved statue of Odin."],
+
+["Powerful Tree Warrior","Decoration","rare",120,
+ {"Wood":5,"Cloth":1},"A decorative warrior figure."],
+
+["Priestess Carving","Decoration","rare",100,
+ {"Wood":4},"A carved priestess."],
+
+["Red Dragon Effigy","Decoration","rare",130,
+ {"Wood":4,"Cloth":1},"A dragon effigy."],
+
+["Ritual Tree Ornaments","Decoration","rare",80,
+ {"Wood":2,"Cloth":2},"Ceremonial decorations."],
+
+["Roman Bath Statue","Decoration","rare",150,
+ {"Stone":5},"A Roman statue."],
+
+["Roman Horse Statue","Decoration","uncommon",80,
+ {"Stone":4},"A Roman horse statue."],
+
+["Roman Olympian Statue","Decoration","rare",150,
+ {"Stone":5},"A statue depicting an Olympian."],
+
+["Roman Gladiator Statue","Decoration","rare",160,
+ {"Stone":5,"Iron":1},"A gladiator statue."],
+
+["Sacrificial Altar","Decoration","epic",250,
+ {"Stone":7,"Iron":2},"A grim ritual altar."],
+
+["Skull Post","Decoration","uncommon",70,
+ {"Wood":3,"Bone":2},"A post decorated with a skull."],
+
+["Small Altar","Decoration","common",35,
+ {"Stone":3},"A simple altar."],
+
+["Small Fairy Trap","Decoration","rare",70,
+ {"Wood":2,"Iron":1},"A whimsical trap decoration."],
+
+["Small Floral Arrangement","Decoration","common",20,
+ {"Herbs":2,"Cloth":1},"A floral decoration."],
+
+["Small Floral Shrine","Decoration","uncommon",50,
+ {"Wood":2,"Herbs":3},"A small shrine."],
+
+["Small Hog Log","Decoration","common",25,
+ {"Wood":3},"A rustic wooden decoration."],
+
+["Stone Well","Decoration","common",50,
+ {"Stone":6},"A settlement well."],
+
+["Thor's Goat Sculpture","Decoration","rare",120,
+ {"Wood":4,"Bone":1},"A sculpture of Thor's goats."],
+
+["Traditional Yule Garland","Decoration","common",25,
+ {"Cloth":2,"Herbs":2},"A festive garland."],
+
+["Tree Axe Warrior","Decoration","rare",100,
+ {"Wood":4,"Iron":1},"A warrior carved into a tree."],
+
+["Tree Spear Warrior","Decoration","rare",100,
+ {"Wood":4,"Iron":1},"A warrior carved into a tree."],
+
+["Victoria Statue","Decoration","rare",150,
+ {"Stone":5},"A Roman victory statue."],
+
+["Victorious Tree Warrior","Decoration","rare",110,
+ {"Wood":4,"Iron":1},"A triumphant warrior carving."],
+
+["Weapon Rack","Decoration","common",45,
+ {"Wood":4},"A rack for displaying weapons."],
+
+
+/* ============================================================
+   LANDMARKS
+   ============================================================ */
+
+["Berserker's Rest","Landmark","rare",150,
+ {"Wood":5,"Stone":3},"A notable settlement landmark."],
+
+["Blooming Tree","Landmark","common",40,
+ {"Wood":4},"A decorative tree."],
+
+["Gallows Tree","Landmark","uncommon",60,
+ {"Wood":5},"A grim landmark."],
+
+["Hangman's Tree","Landmark","uncommon",60,
+ {"Wood":5},"A grim landmark."],
+
+["Mossy Faced Tree","Landmark","rare",80,
+ {"Wood":4,"Moss":2},"A strange tree landmark."],
+
+["Mossy Tree","Landmark","common",35,
+ {"Wood":4,"Moss":1},"A simple landmark."],
+
+["Sage Tree","Landmark","uncommon",55,
+ {"Wood":4,"Herbs":2},"A tree with medicinal associations."],
+
+["White & Red Tree","Landmark","uncommon",55,
+ {"Wood":4,"Cloth":1},"A colourful landmark."],
+
+["Yule Beech Tree","Landmark","rare",80,
+ {"Wood":5,"Cloth":2},"A festive landmark."],
+
+
+/* ============================================================
+   RARE SILVER INGOTS
+   ============================================================ */
+
+["Silver Ingot","Silver Ingots","rare",200,
+ {"Silver Ingot":1},
+ "A refined bar of silver. Rare enough to be valuable in its own right."],
+
+["Pure Silver Ingot","Silver Ingots","very-rare",500,
+ {"Pure Silver":1},
+ "Exceptionally pure silver suitable for masterwork weapons and jewellery."],
+
+["Royal Silver Ingot","Silver Ingots","very-rare",900,
+ {"Pure Silver":2,"Gold":1},
+ "A royal-quality ingot of exceptionally fine silver."],
+
+["Blessed Silver Ingot","Silver Ingots","legendary",1500,
+ {"Pure Silver":2,"Rune Stone":1},
+ "Silver prepared in a sacred ritual. Favoured by monster hunters."],
+
+
+/* ============================================================
+   TREASURE
+   ============================================================ */
+
+["Pouch of Silver","Treasure","common",25,
+ {"Silver":25},
+ "A small pouch containing silver coins."],
+
+["Purse of Silver","Treasure","uncommon",75,
+ {"Silver":75},
+ "A merchant's purse."],
+
+["Heavy Silver Purse","Treasure","rare",180,
+ {"Silver":180},
+ "A substantial purse of silver."],
+
+["Ancient Viking Coin","Treasure","uncommon",30,
+ {"Silver":20,"Iron":1},
+ "An old coin bearing a worn Viking design."],
+
+["Jarl's Signet Ring","Treasure","rare",150,
+ {"Silver":40,"Gold":2,"Gemstone":1},
+ "A signet ring belonging to a powerful noble."],
+
+["Gold Arm Ring","Treasure","epic",450,
+ {"Silver":100,"Gold":10},
+ "A valuable Scandinavian arm ring."],
+
+["Amber Necklace","Treasure","rare",250,
+ {"Amber":5,"Silver":20},
+ "A necklace of polished amber."],
+
+["Royal Brooch","Treasure","epic",600,
+ {"Silver":100,"Gold":10,"Gemstone":2},
+ "A richly decorated noble brooch."],
+
+["Crown of a Forgotten King","Treasure","epic",1000,
+ {"Gold":20,"Silver":100,"Gemstone":3},
+ "The crown of a long-forgotten ruler."],
+
+["Lost Treasure of Ragnar","Treasure","legendary",3000,
+ {"Gold":30,"Silver":500,"Gemstone":5},
+ "A legendary hoard spoken of in Viking sagas."],
+
+
+/* ============================================================
+   EVERYDAY ITEMS
+   ============================================================ */
+
+["Iron Cooking Pot","Everyday","common",8,
+ {"Iron":2},
+ "A battered but usable cooking pot."],
+
+["Wooden Bowl","Everyday","common",3,
+ {"Wood":2},
+ "A simple wooden bowl."],
+
+["Wooden Cup","Everyday","common",2,
+ {"Wood":1},
+ "A drinking cup."],
+
+["Clay Jug","Everyday","common",4,
+ {"Stone":1},
+ "A basic clay jug."],
+
+["Iron Knife","Everyday","common",10,
+ {"Iron":2,"Wood":1},
+ "An ordinary household knife."],
+
+["Fishing Hook","Everyday","common",3,
+ {"Iron":1},
+ "A simple fishing hook."],
+
+["Iron Key","Everyday","common",5,
+ {"Iron":1},
+ "An ordinary iron key."],
+
+["Padlock","Everyday","common",8,
+ {"Iron":2},
+ "A small iron padlock."],
+
+["Rope Coil","Everyday","common",5,
+ {"Cloth":2},
+ "A coil of sturdy rope."],
+
+["Wool Blanket","Everyday","common",7,
+ {"Cloth":3},
+ "A warm wool blanket."],
+
+["Leather Waterskin","Everyday","common",6,
+ {"Leather":2},
+ "A leather waterskin."],
+
+["Comb","Everyday","common",2,
+ {"Wood":1},
+ "A simple wooden comb."],
+
+["Bone Comb","Everyday","uncommon",12,
+ {"Bone":2},
+ "A carved bone comb."],
+
+["Horn Cup","Everyday","uncommon",15,
+ {"Bone":1,"Leather":1},
+ "A drinking horn."],
+
+["Walking Stick","Everyday","common",2,
+ {"Wood":2},
+ "A simple walking stick."],
+
+["Sewing Kit","Everyday","common",8,
+ {"Iron":1,"Cloth":2},
+ "Needles, thread and basic sewing equipment."],
+
+["Flint and Steel","Everyday","common",5,
+ {"Iron":1},
+ "A simple fire-making kit."],
+
+["Oil Lamp","Everyday","common",12,
+ {"Iron":1,"Glass":1},
+ "A small oil lamp."],
+
+["Lantern","Everyday","uncommon",25,
+ {"Iron":2,"Glass":2},
+ "A sturdy travelling lantern."],
+
+["Writing Quill","Everyday","common",2,
+ {"Bone":1},
+ "A simple quill."],
+
+["Ink Pot","Everyday","common",4,
+ {"Glass":1},
+ "A small pot of ink."],
+
+["Parchment","Everyday","common",3,
+ {"Cloth":1},
+ "A sheet of writing parchment."],
+
+["Book","Everyday","uncommon",20,
+ {"Cloth":2},
+ "A handwritten book."],
+
+["Prayer Book","Everyday","rare",60,
+ {"Cloth":2,"Silver":5},
+ "A religious manuscript."],
+
+
+/* ============================================================
+   FOOD & DRINK
+   ============================================================ */
+
+["Apple","Food","common",1,
+ {"Food":1},
+ "A fresh apple."],
+
+["Loaf of Bread","Food","common",2,
+ {"Grain":2},
+ "A basic loaf."],
+
+["Cheese","Food","common",3,
+ {"Food":2},
+ "A wedge of cheese."],
+
+["Dried Meat","Food","common",4,
+ {"Food":2,"Salt":1},
+ "Preserved meat suitable for travel."],
+
+["Smoked Fish","Food","common",4,
+ {"Food":2,"Salt":1},
+ "Smoked fish."],
+
+["Honey","Food","uncommon",8,
+ {"Food":2},
+ "A jar of sweet honey."],
+
+["Rare Spice","Food","rare",35,
+ {"Herbs":3},
+ "An expensive imported spice."],
+
+["Healing Herb Bundle","Food","uncommon",12,
+ {"Herbs":4},
+ "Useful medicinal herbs."],
+
+["Small Mead","Drink","common",5,
+ {"Grain":2},
+ "A small serving of mead."],
+
+["Fine Mead","Drink","uncommon",15,
+ {"Grain":3,"Herbs":1},
+ "Good-quality mead."],
+
+["Jarl's Mead","Drink","rare",40,
+ {"Grain":4,"Herbs":2},
+ "Premium mead fit for a feast."],
+
+["Rare Honey Wine","Drink","epic",100,
+ {"Grain":5,"Herbs":3,"Silver":10},
+ "An exceptionally fine fermented drink."],
+
+
+/* ============================================================
+   MAGIC & RELICS
+   ============================================================ */
+
+["Raven Feather","Magic","common",8,
+ {"Bone":1},
+ "A black feather believed to carry messages from the gods."],
+
+["Rune Stone","Magic","uncommon",40,
+ {"Rune Stone":1},
+ "A small stone carved with a mysterious rune."],
+
+["Rune of Protection","Magic","rare",150,
+ {"Rune Stone":3,"Silver":10},
+ "A protective rune stone."],
+
+["Rune of the Wolf","Magic","rare",175,
+ {"Rune Stone":3,"Bone":1},
+ "A rune associated with wolves."],
+
+["Odin's Eye","Magic","epic",500,
+ {"Rune Stone":4,"Silver":25,"Gemstone":1},
+ "A mysterious relic associated with Odin."],
+
+["Fragment of Yggdrasil","Magic","legendary",1500,
+ {"Rune Stone":5,"Pure Silver":1},
+ "A fragment said to have fallen from the World Tree."],
+
+["Tyr's Rune","Magic","epic",450,
+ {"Rune Stone":4,"Silver":20},
+ "A sacred warrior's rune."],
+
+["Hel's Token","Magic","epic",500,
+ {"Rune Stone":4,"Bone":2},
+ "A dark token associated with the realm of the dead."],
+
+["Jörmungandr Scale","Magic","legendary",2000,
+ {"Bone":3,"Pure Silver":2,"Rune Stone":2},
+ "A supposedly genuine scale of the World Serpent."],
+
+["Valkyrie's Feather","Magic","very-rare",700,
+ {"Bone":1,"Pure Silver":1,"Rune Stone":1},
+ "A luminous feather said to belong to a Valkyrie."],
+
+["Piece of Mjolnir's Stone","Magic","legendary",1800,
+ {"Iron":5,"Pure Silver":2,"Rune Stone":3},
+ "A mysterious fragment associated with Thor's hammer."],
+
+
+/* ============================================================
+   CRAFTING MATERIALS
+   ============================================================ */
+
+["Bundle of Leather","Crafting Material","common",10,
+ {"Leather":10},
+ "A bundle of usable leather."],
+
+["Iron Ore Chunk","Crafting Material","common",5,
+ {"Iron Ore":5},
+ "Raw iron ore."],
+
+["Fine Fabric","Crafting Material","uncommon",15,
+ {"Fabric":5},
+ "High-quality cloth."],
+
+["Titanium Fragment","Crafting Material","rare",30,
+ {"Titanium":1},
+ "A small piece of titanium."],
+
+["Carbon Ingot","Crafting Material","uncommon",150,
+ {"Carbon Ingot":1},
+ "An ingot suitable for improving equipment quality."],
+
+["Nickel Ingot","Crafting Material","rare",250,
+ {"Nickel Ingot":1},
+ "A valuable refinement ingot."],
+
+["Tungsten Ingot","Crafting Material","epic",350,
+ {"Tungsten Ingot":1},
+ "A high-quality refinement ingot."],
+
+["Gemstone","Crafting Material","rare",100,
+ {"Gemstone":1},
+ "A cuttable precious stone."],
+
+["Amber Chunk","Crafting Material","uncommon",25,
+ {"Amber":1},
+ "A piece of Baltic amber."],
+
+["Animal Bone Bundle","Crafting Material","common",8,
+ {"Bone":4},
+ "A collection of useful bones."]
+
+];
+
+
+/* ============================================================
+   NORMALISE DATABASE
+   ============================================================ */
+
+const db = items.map((i,index)=>({
+
+    id:index,
+    name:i[0],
+    category:i[1],
+    rarity:i[2],
+    value:i[3],
+    materials:i[4],
+    description:i[5]
+
+}));
+
+
+/* ============================================================
+   RARITY ORDER
+   ============================================================ */
+
+const rarityOrder = {
+
+    common:1,
+    uncommon:2,
+    rare:3,
+    "very-rare":4,
+    epic:5,
+    legendary:6
+
+};
+
+
+/* ============================================================
+   CATEGORY DROPDOWN
+   ============================================================ */
+
+function populateCategories(){
+
+    const select =
+        document.getElementById("category");
+
+    const categories =
+        [...new Set(db.map(i=>i.category))]
+        .sort();
+
+    categories.forEach(category=>{
+
+        const option =
+            document.createElement("option");
+
+        option.value=category;
+        option.textContent=category;
+
+        select.appendChild(option);
+
+    });
+
+}
+
+
+/* ============================================================
+   MATERIAL VALUE
+   ============================================================ */
+
+function materialTotal(materials){
+
+    return Object.entries(materials)
+        .reduce((total,[material,amount])=>{
+
+            return total +
+                (materialValues[material] || 1) * amount;
+
+        },0);
+
+}
+
+
+/* ============================================================
+   RENDER ITEMS
+   ============================================================ */
+
+function renderItems(){
+
+    const search =
+        document.getElementById("search")
+        .value.toLowerCase();
+
+    const category =
+        document.getElementById("category")
+        .value;
+
+    const rarity =
+        document.getElementById("rarity")
+        .value;
+
+    const sort =
+        document.getElementById("sort")
+        .value;
+
+
+    let result =
+        db.filter(item=>{
+
+            const matchesSearch =
+                item.name.toLowerCase()
+                .includes(search);
+
+            const matchesCategory =
+                category==="all" ||
+                item.category===category;
+
+            const matchesRarity =
+                rarity==="all" ||
+                item.rarity===rarity;
+
+            return matchesSearch &&
+                   matchesCategory &&
+                   matchesRarity;
+
+        });
+
+
+    if(sort==="name")
+        result.sort((a,b)=>
+            a.name.localeCompare(b.name));
+
+    if(sort==="value-low")
+        result.sort((a,b)=>a.value-b.value);
+
+    if(sort==="value-high")
+        result.sort((a,b)=>b.value-a.value);
+
+    if(sort==="rarity")
+        result.sort((a,b)=>
+            rarityOrder[b.rarity]-
+            rarityOrder[a.rarity]);
+
+
+    document.getElementById("status")
+        .textContent =
+        `${result.length} item${result.length===1?"":"s"} found`;
+
+
+    const container =
+        document.getElementById("items");
+
+
+    if(!result.length){
+
+        container.innerHTML =
+            `<div class="empty">
+                No items match your search.
+             </div>`;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        result.map(item=>itemHTML(item)).join("");
+
+}
+
+
+/* ============================================================
+   ITEM HTML
+   ============================================================ */
+
+function itemHTML(item){
+
+    const materialHTML =
+        Object.entries(item.materials)
+        .filter(([_,amount])=>amount>0)
+        .map(([material,amount])=>
+            `<span class="material">
+                ${material} × ${amount}
+             </span>`
+        ).join("");
+
+
+    return `
+        <div class="item ${item.rarity}"
+             onclick="showItem(${item.id})">
+
+            <span class="badge">
+                ${item.rarity.replace("-"," ")}
+            </span>
+
+            <h3>${item.name}</h3>
+
+            <div class="meta">
+                ${item.category}
+            </div>
+
+            <div class="value">
+                🪙 ${item.value} silver
+            </div>
+
+            <div class="description">
+                ${item.description}
+            </div>
+
+            <div class="materials">
+                Salvage:
+                <br>
+                ${materialHTML}
+            </div>
+
+        </div>
+    `;
+
+}
+
+
+/* ============================================================
+   SHOW ITEM
+   ============================================================ */
+
+function showItem(id){
+
+    const item=db.find(i=>i.id===id);
+
+    if(!item)return;
+
+
+    const salvage =
+        Object.entries(item.materials)
+        .filter(([_,amount])=>amount>0)
+        .map(([material,amount])=>
+            `<li>${amount} × ${material}</li>`
+        ).join("");
+
+
+    const salvageValue =
+        materialTotal(item.materials);
+
+
+    document.getElementById("modalContent")
+        .innerHTML=`
+
+        <h2>${item.name}</h2>
+
+        <p class="meta">
+            ${item.category} ·
+            ${item.rarity.replace("-"," ")}
+        </p>
+
+        <h3 style="color:#e2c16b">
+            🪙 ${item.value} silver
+        </h3>
+
+        <p>
+            ${item.description}
+        </p>
+
+        <hr style="border-color:#333">
+
+        <h3>Salvage</h3>
+
+        <ul>
+            ${salvage}
+        </ul>
+
+        <p style="color:#999">
+            Approximate material value:
+            ${salvageValue} silver
+        </p>
+
+        <div class="button-row">
+
+            <button onclick="sellItem(${item.id})">
+                🪙 Sell for ${item.value} silver
+            </button>
+
+            <button onclick="salvageItem(${item.id})">
+                🔨 Salvage
+            </button>
+
+        </div>
+
+    `;
+
+
+    document.getElementById("modal")
+        .classList.add("open");
+
+}
+
+
+/* ============================================================
+   CLOSE MODAL
+   ============================================================ */
+
+function closeModal(){
+
+    document.getElementById("modal")
+        .classList.remove("open");
+
+}
+
+
+/* ============================================================
+   SELL
+   ============================================================ */
+
+function sellItem(id){
+
+    const item=db.find(i=>i.id===id);
+
+    if(!item)return;
+
+    alert(
+        `${item.name}\n\nSold for ${item.value} silver.`
+    );
+
+    closeModal();
+
+}
+
+
+/* ============================================================
+   SALVAGE
+   ============================================================ */
+
+function salvageItem(id){
+
+    const item=db.find(i=>i.id===id);
+
+    if(!item)return;
+
+
+    const parts =
+        Object.entries(item.materials)
+        .filter(([_,amount])=>amount>0)
+        .map(([material,amount])=>
+            `${amount} × ${material}`
+        )
+        .join("\n");
+
+
+    alert(
+        `${item.name} salvaged:\n\n${parts}`
+    );
+
+    closeModal();
+
+}
+
+
+/* ============================================================
+   RANDOM LOOT
+   ============================================================ */
+
+function generateLoot(){
+
+    const rarityWeights={
+
+        common:60,
+        uncommon:25,
+        rare:10,
+        "very-rare":4,
+        epic:.9,
+        legendary:.1
+
+    };
+
+
+    function randomRarity(){
+
+        const total =
+            Object.values(rarityWeights)
+            .reduce((a,b)=>a+b,0);
+
+        let roll=Math.random()*total;
+
+        for(const rarity in rarityWeights){
+
+            roll-=rarityWeights[rarity];
+
+            if(roll<=0)
+                return rarity;
+
+        }
+
+        return "common";
+
+    }
+
+
+    const category =
+        document.getElementById("category")
+        .value;
+
+
+    let pool=db.filter(item=>
+        category==="all" ||
+        item.category===category
+    );
+
+
+    if(!pool.length)
+        pool=db;
+
+
+    const rarity=randomRarity();
+
+
+    let rarityPool =
+        pool.filter(i=>i.rarity===rarity);
+
+
+    if(!rarityPool.length)
+        rarityPool=pool;
+
+
+    const item =
+        rarityPool[
+            Math.floor(
+                Math.random()*rarityPool.length
+            )
+        ];
+
+
+    showLootResult(item);
+
+}
+
+
+/* ============================================================
+   RANDOM TREASURE
+   ============================================================ */
+
+function showRandomTreasure(){
+
+    const treasureCategories=[
+        "Treasure",
+        "Everyday",
+        "Food",
+        "Drink",
+        "Magic",
+        "Crafting Material"
+    ];
+
+
+    const pool=db.filter(item=>
+        treasureCategories.includes(item.category)
+    );
+
+
+    const item=
+        pool[
+            Math.floor(
+                Math.random()*pool.length
+            )
+        ];
+
+
+    showLootResult(item);
+
+}
+
+
+/* ============================================================
+   LOOT RESULT
+   ============================================================ */
+
+function showLootResult(item){
+
+    document.getElementById("modalContent")
+        .innerHTML=`
+
+        <div class="loot-result">
+
+            <span class="badge">
+                ${item.rarity.replace("-"," ")}
+            </span>
+
+            <h2>
+                🎁 ${item.name}
+            </h2>
+
+            <p class="meta">
+                ${item.category}
+            </p>
+
+            <h3 style="color:#e2c16b">
+                🪙 ${item.value} silver
+            </h3>
+
+            <p>
+                ${item.description}
+            </p>
+
+            <hr style="border-color:#333">
+
+            <h3>Can be salvaged into:</h3>
+
+            <ul>
+                ${
+                    Object.entries(item.materials)
+                    .filter(([_,amount])=>amount>0)
+                    .map(([material,amount])=>
+                        `<li>
+                            ${amount} × ${material}
+                        </li>`
+                    ).join("")
+                }
+            </ul>
+
+        </div>
+
+        <button onclick="generateLoot()">
+            🎲 Roll Again
+        </button>
+
+    `;
+
+
+    document.getElementById("modal")
+        .classList.add("open");
+
+}
+
+
+/* ============================================================
+   CLOSE MODAL WHEN CLICKING OUTSIDE
+   ============================================================ */
+
+document.getElementById("modal")
+    .addEventListener("click",function(e){
+
+        if(e.target===this)
+            closeModal();
+
+    });
+
+
+/* ============================================================
+   START
+   ============================================================ */
+
+populateCategories();
+renderItems();
+
+</script>
+
+</body>
+</html>
