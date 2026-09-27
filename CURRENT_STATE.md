@@ -1,30 +1,138 @@
-# Ironsworn Saga — Current State
+# Ironsworn Saga — Current State / Session Checkpoint
 
-> Authoritative quick handoff for development sessions.
+> **Purpose:** finest-grain development handoff. This file should let a new ChatGPT session resume work if the previous chat ends abruptly.
+>
+> Read in this order when resuming: **Project Context → ROADMAP.md → this file**.
+>
+> Update this file **during development**, not only after a feature is finished.
 >
 > Last updated: 2026-09-27
 
-## Stable baseline
+## 1. Live session checkpoint
+
+### Stable baseline
 
 **v1.2.34 — Successful End the Fight FX**
 
-This is the latest user-confirmed stable baseline. Future work must begin here unless the user explicitly establishes a newer tested baseline.
+This is the latest **user-confirmed stable build**.
 
-Known artifact from the originating development session:
+Known artifact name from the originating session:
 
 `ironsworn_saga_v1.2.34_successful_end_fight_fx.html`
 
-The original sandbox path is session-local and should not be assumed to exist in future chats. Preserve/export the actual stable HTML before new implementation work.
+The old sandbox path is session-local and must not be assumed to exist in a future chat. Before implementing code, obtain the actual stable HTML rather than reconstructing Saga from documentation.
 
-## Hosting
+### Current working build
 
-Current working model:
+**None.**
+
+No code change is currently in progress beyond v1.2.34. No untested successor build should be assumed to exist.
+
+### What we are working on right now
+
+The immediate work has been **project continuity infrastructure**, specifically protecting Saga development against ChatGPT conversation-length/session loss.
+
+The continuity hierarchy has now been explicitly defined as:
+
+1. **General Project Context** — durable accumulated knowledge, design philosophy, architecture, lessons learned and major feature concepts. Stored as a ChatGPT Project Source.
+2. **ROADMAP.md** — strategic/living plan: intended features, priorities, dependencies and deferred ideas. Stored in this GitHub repository.
+3. **CURRENT_STATE.md** — this file. Finest-grain live development checkpoint: exactly what the current/last session was doing, how far it got, what was tested, unresolved problems, current files/builds and the precise next action.
+
+### Work completed in this session
+
+- Created a consolidated **Ironsworn Saga General Project Context** Markdown document for upload to ChatGPT Project Sources.
+- Created `ROADMAP.md` in `woodymellor/unlondon`.
+- Created the first version of `CURRENT_STATE.md` in `woodymellor/unlondon`.
+- Clarified that the original Current State document was too much like a static technical snapshot.
+- Redefined Current State as a **live session checkpoint/workbench**.
+- This revision implements that distinction while retaining the stable technical facts needed for safe continuation.
+
+### Testing/status
+
+No Saga application code was changed in this continuity-documentation session, so there is no new Saga build to test.
+
+**Stable application remains v1.2.34.**
+
+### Unresolved / decisions still open
+
+No implementation bug is currently being debugged.
+
+Major roadmap priorities remain open, including:
+- GitHub Pages migration;
+- Google Drive/cloud backup;
+- NPCs/Narrative Threads;
+- persistent POIs/Locations;
+- Foe Forge + Behaviour Engine;
+- Quest Forge;
+- Combat Asset improvements;
+- optional generated foe portraits.
+
+See `ROADMAP.md` for strategic detail.
+
+### Precise next action
+
+When development resumes:
+
+1. User chooses the next feature to implement.
+2. Read the Project Context, then `ROADMAP.md`, then this checkpoint.
+3. Obtain the actual **v1.2.34 stable HTML** (or a newer user-confirmed stable build if this file has subsequently been updated).
+4. Record the chosen feature below as **Current task** and record the source artifact under **Current working build** before/when modification begins.
+5. Implement **one coherent feature only**.
+6. Update this checkpoint as meaningful progress/debugging decisions occur.
+7. User tests the produced build in Perchance/Quest.
+8. Only after user confirmation promote it to **Stable baseline**.
+
+---
+
+## 2. How to maintain this checkpoint
+
+During an active coding session, the top section should contain enough detail to resume without the previous conversation.
+
+At minimum keep these fields current:
+
+- **Stable baseline** — last user-tested and confirmed build.
+- **Current working build** — exact filename/version being modified or tested.
+- **Current task** — one coherent feature currently being implemented.
+- **Last completed step** — what was just changed.
+- **Current test result** — what the user tested and what happened.
+- **Known issue / hypothesis** — exact failure and likely cause if debugging.
+- **Relevant implementation details** — functions/state keys/selectors/files that matter to the active task.
+- **Next action** — the single most useful next step.
+- **Do not repeat** — failed approaches discovered during this session.
+
+Example of the intended granularity:
+
+```text
+Stable baseline: v1.2.34
+Current working build: v1.2.35-test-2
+Current task: Owned Asset cards in Combat
+Last completed step: Combat card rendering works.
+Test result: Quest rendering passed; Companion name does not persist after reload.
+Relevant state: state.ownedAssets[...].instanceFields
+Next action: inspect save/normalisation path for owned asset instance fields.
+Do not repeat: storing Companion name only on transient rendered Datasworn definition.
+```
+
+When a feature is successfully tested:
+- promote that build to Stable baseline;
+- move durable architectural lessons to the Project Context when warranted;
+- update `ROADMAP.md` completion/status;
+- clear/reset the active working-build/task/debug fields for the next feature.
+
+---
+
+## 3. Stable technical state — v1.2.34
+
+The remainder of this file records technical facts needed to avoid regressions while resuming work.
+
+### Hosting
+
 - Saga remains a single-page HTML app used via Perchance.
-- Long-term plan: migrate to GitHub Pages, but **not yet**.
-- Repository **woodymellor/unlondon** currently hosts Saga-related audio and other assets.
-- Do not assume the current Saga HTML itself has already been migrated into this repo.
+- Long-term plan is GitHub Pages, but **not yet**.
+- Repository `woodymellor/unlondon` currently hosts Saga-related audio and continuity documents.
+- Do not assume the stable Saga HTML itself is already stored in the repo.
 
-## Storage
+### Storage
 
 Implemented:
 - localStorage autosave
@@ -36,21 +144,20 @@ Not implemented:
 - `.issaga` cloud campaign files
 - automatic cloud snapshots
 
-Cloud backup is a high-priority future milestone.
+Cloud backup is a high-priority roadmap milestone.
 
-## Rules/data
+### Rules/data foundation
 
-Embedded/integrated foundation:
 - Ironsworn Classic Datasworn
 - Ironsworn Delve Datasworn
 - Classic assets
 - Classic + Delve oracle library
 - Delve moves, themes, domains and example sites
-- source/page metadata and Datasworn IDs retained where implemented
+- Datasworn IDs/source metadata retained where implemented
 
-Classic + Delve are treated as the default combined Ironsworn rules/content foundation.
+Classic + Delve are treated as the default combined Ironsworn foundation.
 
-## Main implemented campaign features
+### Main implemented campaign features
 
 - Character sheet
 - Standard action rolls
@@ -70,30 +177,21 @@ Classic + Delve are treated as the default combined Ironsworn rules/content foun
 - import/export
 - dedicated Combat tab
 
-## Combat state
+### Combat state
 
 Combat is a main tab.
 
-Combat tracks support:
-- progress
-- End the Fight
-- rename
-- manual finish
-- delete when appropriate
+Combat tracks support progress, End the Fight, rename, manual finish and deletion where appropriate.
 
-Important current victory architecture:
+**Critical victory architecture: do not automatically use `finished=true` for successful End the Fight.**
 
-**Do not automatically use `finished=true` for a successful End the Fight.**
-
-The stable approach uses:
+Stable approach:
 
 `t.defeated = true`
 
-This keeps the defeated foe card visible rather than causing it to disappear from active-combat rendering.
+This keeps the defeated foe card visible. The renderer applies defeated styling to combat tracks that are finished or defeated.
 
-Renderer applies defeated styling for combat tracks that are finished or defeated.
-
-### House rule
+#### House rule
 
 Persisted setting:
 
@@ -106,32 +204,28 @@ Approved behaviour:
 - ON → Strong Hit or Weak Hit defeats the foe.
 - Miss never defeats the foe.
 
-This setting affects the **End the Fight progress-roll victory result**. Do not reintroduce the abandoned logic that disables the End the Fight button based on Saga's interpretation of the preceding move.
+This changes the **End the Fight progress-roll victory result**. Do not restore the abandoned logic that disabled the End the Fight button based on Saga's interpretation of preceding-move eligibility.
 
-### Successful End the Fight FX
+#### Successful End the Fight FX
 
-Whenever End the Fight is successful under the above rule:
+On every successful End the Fight under the above rule:
 - foe becomes defeated;
 - completion sparks play;
 - NewQuest cue plays if sound is enabled;
-- existing combat hit/slash behaviour remains in its normal path.
+- normal combat hit/slash behaviour remains in its existing path.
 
-## Progress display
+### Progress display
 
 - 10 progress boxes.
-- 4 ticks fill one box.
-- 40 ticks fill the track.
-- Full box symbol is **✱**.
-- At 40 ticks, the track receives a subtle completed-track glow/pulse.
-- Reduced-motion preference gets a static treatment.
+- 4 ticks per full box.
+- 40 ticks fills the track.
+- Full box symbol: **✱**.
+- At 40 ticks, subtle completed-track glow/pulse.
+- Reduced-motion preference receives a static treatment.
 
-## Audio
+### Audio
 
-Audio is hosted externally in GitHub rather than embedded in the HTML.
-
-Repository: **woodymellor/unlondon**
-
-Known files:
+Hosted externally in `woodymellor/unlondon`:
 - `horn.mp3`
 - `drums.mp3`
 - `drums.wav`
@@ -142,147 +236,98 @@ Known files:
 - `LevelUp.mp3`
 - `slash.mp3`
 
-### Soundboard
-Implemented:
-- Drums loop
-- Drone loop
-- Horn
-- New Quest
-- Quest Done
-- Skill Up
-- Level Up
-- Stop All
-- master sound ON/OFF
-- persisted master volume
+Soundboard includes Drums, Drone, Horn, New Quest, Quest Done, Skill Up, Level Up, Stop All, master sound ON/OFF and persisted master volume. Turning sound off stops active loops/cues.
 
-Switching sound OFF stops active loops/cues.
+#### Drum loop
 
-### Drum loop
+Correct stable architecture is **Web Audio API buffer looping**, introduced in v1.2.18:
+- fetch audio;
+- decode AudioBuffer;
+- AudioBufferSourceNode;
+- `loop=true`;
+- `loopStart=0`;
+- `loopEnd=buffer.duration`;
+- gain node follows master volume.
 
-The correct stable architecture is **Web Audio API buffer looping**, introduced in v1.2.18:
-- fetch audio
-- decode to AudioBuffer
-- AudioBufferSourceNode
-- `loop=true`
-- `loopStart=0`
-- `loopEnd=buffer.duration`
-- gain node follows master volume
+Do not return to failed HTML Audio overlap/dual-deck loop experiments.
 
-Do not return to the failed HTML Audio overlap/dual-deck loop experiments.
+### Visual effects
 
-## Visual effects
-
-Implemented/confirmed lineage includes:
+Confirmed lineage includes:
 - combat miss → brief red edge vignette;
-- combat strong/weak hit → steel slash visual;
-- combat hit → `slash.mp3` when sound is enabled;
-- Oracle result → drifting runes;
-- Mark Progress → warm bronze progress-box glow;
-- strong Fulfill Your Vow → sparks, LevelUp audio if enabled, delayed **IRON VOW FULFILLED** ceremonial title;
+- combat Strong/Weak Hit → steel slash visual;
+- combat hit → `slash.mp3` when sound enabled;
+- Oracle → drifting runes;
+- Mark Progress → warm bronze progress glow;
+- strong Fulfill Your Vow → sparks + LevelUp if enabled + delayed **IRON VOW FULFILLED** title;
 - successful End the Fight → victory sparks + NewQuest cue;
 - reduced-motion support.
 
-The aesthetic target is restrained Ironlands/Nordic atmosphere, not flashy videogame UI.
+Aesthetic target: restrained Ironlands/Nordic atmosphere, not flashy videogame UI.
 
-## UI
+### UI
 
-- Single-page/tabbed application.
-- Dark charcoal/iron translucent panels.
-- Warm parchment/ivory text.
-- Restrained bronze accents.
-- Atmospheric landscape treatment.
-- Cinzel headings/nav/branding.
-- Crimson Pro body/interface.
-- Dark Journal textarea.
-- Compact, Quest-controller-friendly interaction.
-- Avoid unnecessary typing.
-- Avoid wholesale redesign of stable screens.
+- single-page/tabbed app;
+- dark charcoal/iron translucent panels;
+- warm parchment/ivory text;
+- restrained bronze accents;
+- Cinzel headings/nav/branding;
+- Crimson Pro body/interface;
+- dark Journal textarea;
+- compact Quest-controller-friendly interaction;
+- minimise typing;
+- avoid wholesale redesign of stable screens.
 
-## Delphi
+### Delphi
 
 Optional ChatGPT Voice assistant named **Delphi**.
 
-Delphi:
-- helps with rules, moves, oracles, NPC portrayal, continuity and fiction;
-- does not control the player's character;
-- does not silently update Saga;
-- is not required to play.
+Current Quest setup:
+- WorldLens → exterior/3D London;
+- Saga → mechanics/campaign state;
+- ChatGPT Voice/Delphi → optional spoken assistant.
 
-Current practical setup on Quest 2:
-- WorldLens for exterior/3D London.
-- Saga in Quest Browser for mechanics/campaign state.
-- ChatGPT Voice/Delphi in Quest Browser as optional spoken assistant.
+Delphi helps with rules, moves, oracles, NPC portrayal, continuity and fiction. It does not control the player's character or silently update Saga.
 
-Do not design Saga features that require Delphi.
+**Saga must remain fully playable without Delphi.**
 
-## Persistent interiors
+---
 
-Not implemented. Agreed roadmap direction:
-- ASCII/text maps;
-- persistent layouts/discovery;
-- conventional pre-generated interiors;
-- Delve-as-you-go maps;
-- stored as campaign state;
-- Delphi only needs what the player tells it.
+## 4. Roadmap features not yet implemented
 
-## Foe Forge / Behaviour Engine
+These summaries exist only to prevent a future agent from mistaking planned features for current functionality. Full design belongs in `ROADMAP.md` and the Project Context.
 
-Not implemented. Agreed roadmap direction:
-- modular constraint-aware foe/boss generation;
-- archetype-driven behaviour;
-- weighted **FOE ACTION**;
-- FAR/NEAR/ENGAGED-style minimal situation state;
-- recent-use/cooldown logic;
-- progress-informed boss escalation;
-- generated foe attached to a specific Combat Progress Track;
-- no separate HP system;
-- fully playable without Delphi.
+### Persistent Interiors
+Not implemented. Planned: ASCII maps, persistent layout/discovery, conventional generated interiors plus Delve-as-you-go, stored in campaign state.
 
-Optional future one-click generated portrait is under investigation.
+### Foe Forge / Behaviour Engine
+Not implemented. Planned: modular constraint-aware foe/boss generation, archetypes, weighted FOE ACTION, minimal FAR/NEAR/ENGAGED state, cooldown/repetition logic, progress-informed escalation and attachment to a specific Combat Progress Track. No separate HP system. Must work without Delphi.
 
-## Quest Forge / POIs
+### Quest Forge / POIs
+Not implemented. Planned: persistent Points of Interest and constraint-aware quest structures that reveal progressively and defer actual fiction to Ironsworn/oracles.
 
-Not implemented. Agreed roadmap direction:
-- persistent Points of Interest;
-- constraint-aware quest archetypes/modules;
-- reuse campaign POIs;
-- quest information revealed progressively;
-- Ironsworn/oracles determine fiction rather than a pre-written hidden script.
+### NPCs / Narrative Threads
+Not first-class Saga records yet. Planned durable status/weight/search/roll functionality and Delphi briefing inclusion.
 
-## NPCs / Narrative Threads
+### Combat Asset improvements
+Pending: owned Asset cards in Combat, editable asset-instance fields/Companion state and roll-aware suggestions for mechanically detectable asset triggers.
 
-Not yet integrated as first-class Saga records. Desired eventually:
-- Active / Dormant / Resolved
-- weights
-- search/filter
-- roll NPC/thread
-- durable cloud-backed storage
-- Delphi briefing inclusion
+### Generated foe portraits
+Not implemented. One-click portrait concept remains exploratory. Hybrid Perchance/GitHub architecture requires proof-of-concept testing and an image-persistence solution.
 
-## Asset work still pending
+---
 
-- owned Asset cards on Combat screen;
-- editable owned-asset instance fields;
-- Companion names/state;
-- roll-aware suggestions for detectable asset triggers.
+## 5. Known failed/reverted builds
 
-## Known failed/reverted builds
+Do not use these as baseline:
 
-Do not use as baseline:
+- **v1.3.0 / v1.3.1 / v1.3.2** — bulk feature experiments broke layout/sidebar; abandoned.
+- **v1.2.29** — successful End the Fight used `finished=true`, causing combat card to close/disappear.
+- **v1.2.31** — `canTriggerEndFight()` / button-disable experiment broke End the Fight.
+- **v1.2.12–v1.2.17 drum experiments** — HTML Audio overlap/native approaches superseded by Web Audio v1.2.18.
 
-- **v1.3.0, v1.3.1, v1.3.2** — bulk feature experiments broke layout/sidebar; abandoned.
-- **v1.2.29** — successful End the Fight set `finished=true`, causing the combat card to close/disappear.
-- **v1.2.31** — `canTriggerEndFight()`/button-disable experiment broke End the Fight.
-- **v1.2.12–v1.2.17 drum experiments** — overlap/native HTML Audio approaches superseded by Web Audio v1.2.18.
+## 6. Handoff rule
 
-## Development workflow for the next agent
+If a future chat finds this file mid-debugging, **continue from the live checkpoint at the top rather than restarting the feature from the roadmap**.
 
-Before editing Saga:
-1. Read this file.
-2. Read `ROADMAP.md`.
-3. Read the Project Source general context document if available.
-4. Obtain the actual latest stable HTML; do not reconstruct it from prose.
-5. Make one coherent change only.
-6. Return a complete replacement HTML build when that is the requested workflow.
-7. Wait for user testing before updating the stable baseline in this file.
-
+Do not promote a working/test build to stable merely because code was generated. Stable means the user has tested and confirmed it.
