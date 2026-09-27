@@ -33,12 +33,15 @@ Implement **one coherent feature at a time** from the latest user-confirmed stab
 ## Priority infrastructure
 
 ### GitHub Pages migration
-Status: planned; deliberately deferred until ready.
+Status: deployed; desktop/browser launch confirmed 2026-09-27. Quest 2 validation remains.
 
-- Move the confirmed stable Saga application to GitHub Pages with minimal functional change.
-- Keep the Perchance stable version as fallback until Quest 2 testing succeeds.
-- Export campaign JSON before changing origins; localStorage will not migrate automatically.
-- Only after migration is stable consider splitting HTML/CSS/JS/data into separate files.
+- [x] Exact confirmed stable v1.2.34 moved to repository-root `index.html` with no functional refactor.
+- [x] GitHub Pages enabled from `main` / root.
+- [x] Live deployment opened successfully at `https://woodymellor.github.io/unlondon/`.
+- [x] Existing Perchance localStorage deliberately not migrated; it contained playtest data only.
+- [ ] Validate the GitHub Pages build in Quest 2.
+- [ ] After Quest validation, treat GitHub Pages as the development baseline.
+- Only after migration is fully validated consider splitting HTML/CSS/JS/data into separate files.
 
 ### Cloud backup
 Status: high priority.
