@@ -1,10 +1,6 @@
 # Ironsworn Saga — Current State / Session Checkpoint
 
-> **Purpose:** finest-grain development handoff. This file should let a new ChatGPT session resume work if the previous chat ends abruptly.
->
-> Read in this order when resuming: **Project Context → ROADMAP.md → this file**.
->
-> Update this file **during development**, not only after a feature is finished.
+> **Purpose:** finest-grain development handoff. Read in this order when resuming: **Project Context → ROADMAP.md → this file**.
 >
 > Last updated: 2026-09-27
 
@@ -14,73 +10,55 @@
 
 **v1.2.34 — Successful End the Fight FX**
 
-This is the latest **user-confirmed stable build**.
-
-Known artifact name from the originating session:
-
-`ironsworn_saga_v1.2.34_successful_end_fight_fx.html`
-
-The old sandbox path is session-local and must not be assumed to exist in a future chat. Before implementing code, obtain the actual stable HTML rather than reconstructing Saga from documentation.
+This remains the latest user-confirmed stable application build. The exact recovered build is now committed as repository-root `index.html` on `main`.
 
 ### Current working build
 
-**None.**
+**GitHub Pages deployment of exact v1.2.34.**
 
-No code change is currently in progress beyond v1.2.34. No untested successor build should be assumed to exist.
+Repository: `woodymellor/unlondon`  
+Source path: `/index.html`  
+Live URL: `https://woodymellor.github.io/unlondon/`
 
-### What we are working on right now
+No Saga feature code was changed during migration.
 
-The immediate work has been **project continuity infrastructure**, specifically protecting Saga development against ChatGPT conversation-length/session loss.
+### Current task
 
-The continuity hierarchy has now been explicitly defined as:
+**Finish GitHub Pages migration validation.**
 
-1. **General Project Context** — durable accumulated knowledge, design philosophy, architecture, lessons learned and major feature concepts. Stored as a ChatGPT Project Source.
-2. **ROADMAP.md** — strategic/living plan: intended features, priorities, dependencies and deferred ideas. Stored in this GitHub repository.
-3. **CURRENT_STATE.md** — this file. Finest-grain live development checkpoint: exactly what the current/last session was doing, how far it got, what was tested, unresolved problems, current files/builds and the precise next action.
+The exact v1.2.34 file was recovered from the prior generated artifact, uploaded to the repository root, verified by content/version, and GitHub Pages was enabled from `main` / `(root)`.
 
-### Work completed in this session
+### Last completed step / test result
 
-- Created a consolidated **Ironsworn Saga General Project Context** Markdown document for upload to ChatGPT Project Sources.
-- Created `ROADMAP.md` in `woodymellor/unlondon`.
-- Created the first version of `CURRENT_STATE.md` in `woodymellor/unlondon`.
-- Clarified that the original Current State document was too much like a static technical snapshot.
-- Redefined Current State as a **live session checkpoint/workbench**.
-- This revision implements that distinction while retaining the stable technical facts needed for safe continuation.
+- Repository `index.html` verified as v1.2.34 and containing the expected successful End the Fight implementation.
+- GitHub Pages deployment started successfully.
+- User opened the live GitHub Pages site and confirmed: **“It's working.”**
+- Desktop/browser deployment is therefore confirmed.
+- Quest 2 validation has **not yet been reported**.
 
-### Testing/status
+### Storage/migration decision
 
-No Saga application code was changed in this continuity-documentation session, so there is no new Saga build to test.
+Existing Perchance/localStorage campaign data was playtesting only and the user explicitly does **not** want it preserved. No localStorage migration/import is required.
 
-**Stable application remains v1.2.34.**
-
-### Unresolved / decisions still open
-
-No implementation bug is currently being debugged.
-
-Major roadmap priorities remain open, including:
-- GitHub Pages migration;
-- Google Drive/cloud backup;
-- NPCs/Narrative Threads;
-- persistent POIs/Locations;
-- Foe Forge + Behaviour Engine;
-- Quest Forge;
-- Combat Asset improvements;
-- optional generated foe portraits.
-
-See `ROADMAP.md` for strategic detail.
+Because browser localStorage is origin-specific, the GitHub Pages version starts with its own fresh local state.
 
 ### Precise next action
 
-When development resumes:
+At the next development session:
 
-1. User chooses the next feature to implement.
-2. Read the Project Context, then `ROADMAP.md`, then this checkpoint.
-3. Obtain the actual **v1.2.34 stable HTML** (or a newer user-confirmed stable build if this file has subsequently been updated).
-4. Record the chosen feature below as **Current task** and record the source artifact under **Current working build** before/when modification begins.
-5. Implement **one coherent feature only**.
-6. Update this checkpoint as meaningful progress/debugging decisions occur.
-7. User tests the produced build in Perchance/Quest.
-8. Only after user confirmation promote it to **Stable baseline**.
+1. Test `https://woodymellor.github.io/unlondon/` in the Quest 2 browser.
+2. Verify core UI, rolls, campaign persistence/reload, and GitHub-hosted audio/FX behave normally.
+3. If the user confirms the Quest test, mark the GitHub Pages deployment as the official development baseline.
+4. Begin the next priority infrastructure feature: **Google Drive/cloud backup**.
+5. Continue the one-coherent-feature / user-test / promote workflow.
+
+### Do not repeat
+
+- Do not reconstruct v1.2.34 from documentation; the exact stable source is now repository-root `index.html`.
+- Do not create or require a `saga/` subfolder; the chosen deployment is the repository root.
+- Do not spend effort migrating old Perchance localStorage; the user explicitly does not want that playtest state preserved.
+- Do not refactor/split the stable single-file app as part of migration.
+- Do not call GitHub Pages the fully validated baseline until Quest 2 testing is confirmed.
 
 ---
 
@@ -127,10 +105,11 @@ The remainder of this file records technical facts needed to avoid regressions w
 
 ### Hosting
 
-- Saga remains a single-page HTML app used via Perchance.
-- Long-term plan is GitHub Pages, but **not yet**.
-- Repository `woodymellor/unlondon` currently hosts Saga-related audio and continuity documents.
-- Do not assume the stable Saga HTML itself is already stored in the repo.
+- Saga remains a single-page HTML app.
+- Exact stable v1.2.34 is stored as repository-root `index.html` in `woodymellor/unlondon`.
+- GitHub Pages is enabled from `main` / root and the live site has been confirmed to open successfully.
+- Quest 2 validation is still pending before GitHub Pages is treated as the fully validated development baseline.
+- Perchance is now the legacy/fallback host rather than the intended development target.
 
 ### Storage
 
