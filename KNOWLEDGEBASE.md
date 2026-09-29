@@ -55,3 +55,16 @@ The user's original **Ironsworn Saga — General Project Context**, last consoli
 - Distinguish original Ironsworn RAW, official expansion content, setting-specific homebrew content and explicit house rules. JSON is declarative data/configuration, not arbitrary executable JavaScript. Saga must implement any supported mechanical modification.
 - Selected package identities/versions belong in campaign metadata; missing or incompatible packages require warnings. Schema, dependency resolution, conflict/override semantics and import UX are still open design questions, not established implementation.
 - Future settings can supply their own JSON without duplicating or modifying Saga's core application. Reusable compatible homebrew packages may be combined across settings.
+
+
+## UnLondon postcode-world model — agreed design, 2026-09-29
+
+**Status: AGREED DESIGN / PROTOTYPE, not implemented or playtested in stable Saga.** The original standalone Locations mock-up demonstrated a postcode selector and persistent enemy/loot state; the subsequent combined Delve mock-up was exploratory. The agreed direction is to keep those responsibilities separate.
+
+- **District (open world):** a real postcode district is a persistent area with an established population and durable state. Precise positions of all ordinary enemies need not be tracked. Rest/death may repopulate respawnable enemies without reversing permanent boss, unique-loot or discovery changes.
+- **Location (named place):** a place within a district; its type may be ordinary POI, encounter, merchant, quest location, checkpoint or Delve site. A district can have any number of Delve sites, including none.
+- **Delve site (expedition):** a self-contained location where official Delve site creation, exploration and objective mechanics apply. Delve progress belongs to that site, not automatically to its parent postcode district. Do not replace or silently alter official Delve mechanics with Souls-like district respawning.
+- **Architectural boundary:** Classic/Delve Saga remains setting-independent; the UnLondon postcode Locations model is setting/campaign-specific. Link to generic Delve records where appropriate rather than duplicate the Delve engine in Locations.
+- **Map/reference boundary:** the existing Knowledge Dashboard stays an independent browser reference. Saga does not need postcode polygons, map rendering or communication with the dashboard; a current-postcode selector is sufficient.
+- **Campaign data:** distinguish reusable setting/location definitions from saved mutable district populations, individual foe status, collected loot, discovered locations and per-site Delve state. This is a design distinction, not an implemented schema.
+- **Game-design analogy:** Elden Ring-style open regions containing optional self-contained dungeons; exploration of the surrounding region is independent of completing any dungeon. The analogy is a design reference, not a claim that Ironsworn or Delve supplies these open-world persistence rules.
