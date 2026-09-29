@@ -33,3 +33,47 @@ This is an index of significant decisions already documented in the existing pro
 - **Choice:** Delphi is an optional spoken assistant. Saga remains fully playable without it.
 
 These entries are navigation aids, not replacements for the detailed source records.
+
+
+## Additional established decisions from the original project context
+
+### UL-007 — Rules and canon authority
+- **Status:** Active.
+- **Choice:** The supplied rulebook and Datasworn sources govern RAW; implementation, house rules, campaign canon and roadmap proposals are separate categories. Campaign ideas marked PROPOSED or UNKNOWN are not established history.
+- **Reason:** Avoid invented mechanics and fabricated campaign continuity.
+
+### UL-008 — Structure without scripted story
+- **Status:** Active.
+- **Choice:** Saga generates useful structure, spatial constraints and pressure; Ironsworn/oracles establish the actual fiction. Do not pre-write quests or require Delphi as a hidden GM.
+- **Reason:** Preserve solo Ironsworn's play-to-find-out approach.
+
+### UL-009 — Minimise duplicated bookkeeping
+- **Status:** Active.
+- **Choice:** Reject the manually maintained “Now” panel; infer current information from existing state where possible. A pinned/active track may be considered.
+- **Reason:** Do not require the player to enter information merely so Saga appears intelligent.
+
+### UL-010 — Persistent interiors
+- **Status:** Agreed design; implementation planned.
+- **Choice:** Use lightweight persistent ASCII/text maps, not a full graphical dungeon engine. Keep established location topology and campaign discovery state separate; Delphi does not need hidden map data.
+- **Reason:** Provide repeatable interior exploration without excessive complexity or duplicating WorldLens.
+
+### UL-011 — Procedural foe and combat boundaries
+- **Status:** Agreed design; implementation planned.
+- **Choice:** Constraint-aware modular foes attach to Combat Progress Tracks; weighted FOE ACTION describes intent, not automatic outcomes. Use minimal positional state and no separate boss HP.
+- **Reason:** Preserve Ironsworn mechanics, fiction-first resolution and low bookkeeping.
+
+### UL-012 — Generation and persistence ownership
+- **Status:** Active architectural decision for future features.
+- **Choice:** External services such as Perchance may generate; Saga owns and persists accepted structured state. Portrait persistence is separate from foe-data persistence.
+- **Reason:** Campaign continuity must not depend on a transient generator.
+
+### UL-013 — One codebase for editions
+- **Status:** Active future architecture.
+- **Choice:** Use one core codebase with configuration/content differences for personal and potential public editions. Separate code, content and campaign data.
+- **Reason:** Avoid divergent implementations and exposure of personal campaign state.
+
+### UL-014 — Project Factory migration
+- **Date:** 29 September 2026.
+- **Status:** Active.
+- **Choice:** Keep the original context verbatim in a separate archive; use a shorter context as entry point and distribute durable details into GitHub documents. Existing roadmap, checkpoint and application source are preserved.
+- **Reason:** Improve fresh-chat continuity without losing prior decisions or technical detail.
