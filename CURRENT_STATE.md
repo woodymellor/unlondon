@@ -310,3 +310,16 @@ Do not use these as baseline:
 If a future chat finds this file mid-debugging, **continue from the live checkpoint at the top rather than restarting the feature from the roadmap**.
 
 Do not promote a working/test build to stable merely because code was generated. Stable means the user has tested and confirmed it.
+
+
+## 7. Agreed project split and package architecture — 2026-09-29
+
+**Design agreement only; no application feature has been implemented and the v1.2.34 baseline/current Quest-validation checkpoint above is unchanged.**
+
+- **Ironsworn Saga:** setting-independent web tool, generic mechanics, Datasworn integration, content-package importer/manager and campaign persistence. This GitHub repository remains the application source of truth.
+- **UnLondon:** separate setting and campaign project, including worldbuilding, its own JSON content package, setting-specific homebrew and optional house rules. Future settings can supply other packages without forking Saga.
+- **Delphi:** initially lives with UnLondon as a setting-aware voice assistant; a third project is optional later.
+- **Content Packages page (planned):** choose/import and enable multiple compatible JSON packages. Classic is required; Delve and custom packages are optional. A campaign remembers its package IDs/versions and warns about missing dependencies.
+- **Authority boundary:** official RAW remains distinct from custom content and explicit supported house-rule modifications. JSON supplies data/configuration; it must not execute arbitrary code.
+- **Persistence boundary:** package files define reusable content and rules configuration; separate campaign saves store mutable character/campaign state. Multiple independent campaigns may use the same package.
+- Full design and implementation work are tracked in ROADMAP.md; durable distinctions in KNOWLEDGEBASE.md; the decision record in DECISIONS.md.
