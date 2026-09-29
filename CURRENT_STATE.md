@@ -323,3 +323,16 @@ Do not promote a working/test build to stable merely because code was generated.
 - **Authority boundary:** official RAW remains distinct from custom content and explicit supported house-rule modifications. JSON supplies data/configuration; it must not execute arbitrary code.
 - **Persistence boundary:** package files define reusable content and rules configuration; separate campaign saves store mutable character/campaign state. Multiple independent campaigns may use the same package.
 - Full design and implementation work are tracked in ROADMAP.md; durable distinctions in KNOWLEDGEBASE.md; the decision record in DECISIONS.md.
+
+
+## 8. UnLondon open-world Locations / Delve separation — agreed 2026-09-29
+
+**Design agreement only.** No application code has changed; v1.2.34 remains the last user-confirmed stable build. The original standalone Locations mock-up is a prototype, not a Saga feature. The combined Locations + Delve mock-up was exploratory and does not supersede the agreed separation.
+
+- **Postcode district = persistent open-world area**, not a Delve site or mandatory dungeon. Its saved campaign state can include an established ordinary-enemy population, unique foes/bosses, loot/discoveries, NPCs, checkpoints and named locations. Ordinary enemies can respawn on resting or death; defeated unique bosses and collected unique loot remain changed.
+- **Named locations within a district** may be ordinary points of interest, encounters, merchants, quest locations, Sites of Grace/checkpoints, or optional Delve sites. A district may contain zero, one or several Delve sites.
+- **Delve = self-contained site exploration** where its existing theme, domain, rank, progress, moves and objective are appropriate. A postcode district does not acquire a Delve progress track merely because it is a district. Exploration of the open area is independent of completing its Delve sites.
+- **Product boundary:** generic Classic Ironsworn + Delve Saga keeps its Delve interface and rules setting-independent. The postcode-based Locations/world-state system is an UnLondon campaign/setting feature, not a new default interpretation of Delve.
+- **Map boundary:** use the existing Knowledge Dashboard separately as a geographic reference. Do not reproduce its map or build a map-to-Saga integration. Selecting the current postcode in Saga is sufficient for the experimental workflow.
+- **Prototype direction:** return to the original Locations mock-up as the conceptual base; add named places under each district, optionally linked to separately managed Delve sites. Avoid coupling the two interfaces or duplicating Delve rules.
+- **Playtest status:** one-day experimental design; exact implementation, data model and workflow are not yet tested or committed.
