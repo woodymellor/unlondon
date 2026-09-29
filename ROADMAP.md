@@ -274,3 +274,15 @@ Maintain one core codebase with configuration/content differences rather than tw
 - Separate HP system for bosses.
 - Full graphical dungeon engine when ASCII is sufficient.
 - Giving Delphi hidden interior/GM map data by default.
+
+
+## Supplementary specifications retained from original context (29 September 2026 migration)
+
+These refine existing planned features; they do **not** change implementation status.
+
+- **Delphi briefing:** Fresh voice chats may use Project sources and established campaign records. A compact export should support character/resources, active tracks, Campaign State, recent Chronicle, assets and active NPCs/Threads. Useful discussed voice commands: Start session, What now?, Rules check, Recap, Oracle, End session.
+- **Persistent interiors:** Preserve both the permanent location definition and the separate campaign discovery state (door states, explored areas, notes and changes). Saga owns hidden spatial data; Delphi only needs what play reveals.
+- **Foe behaviour:** If position changes are suggested, apply them only after fiction establishes the change. An explicit player-confirmed APPLY POSITION interaction is a possible design, not a committed implementation.
+- **Quest fog-of-war:** Templates may retain unresolved slots, e.g. a clue leading to a compatible `[industrial]` or `[river]` POI selected only when that stage is reached. Prefer existing compatible POIs while permitting new ones.
+- **Portrait hybrid:** For any external generation path, prove Quest 2 iframe generation and cross-origin `postMessage`; accepted foe data must persist in Saga even if portrait storage is unresolved.
+- **Public edition:** Separate code, content and campaign data; do not embed personal campaign data in the public application.
