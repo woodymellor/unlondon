@@ -45,3 +45,13 @@ Do not require the player to enter information merely to make Saga appear intell
 
 ### Historical source
 The user's original **Ironsworn Saga — General Project Context**, last consolidated 27 September 2026, is preserved verbatim as the separately supplied `UNLONDON_ORIGINAL_CONTEXT_2026-09-27.md`. This migration does not treat its superseded Perchance hosting paragraph as current state.
+
+
+## Project boundaries and reusable content packages — agreed 2026-09-29
+
+- **Ironsworn Saga** is the generic software project. **UnLondon** is a separate setting/campaign project that may define original assets, oracles, foes, equipment, other content and limited changes to core mechanics. **Delphi** initially belongs to the setting project; separating it later is an open option.
+- A proposed **Content Packages** page loads/enables multiple compatible JSON packages, not just one exclusive setting. Classic is the required base; Delve and custom packages may coexist.
+- **Package vs save:** reusable JSON packages define available content and supported rule settings. Campaign saves contain mutable character state, progress, discoveries and history; campaigns using the same package remain independent.
+- Distinguish original Ironsworn RAW, official expansion content, setting-specific homebrew content and explicit house rules. JSON is declarative data/configuration, not arbitrary executable JavaScript. Saga must implement any supported mechanical modification.
+- Selected package identities/versions belong in campaign metadata; missing or incompatible packages require warnings. Schema, dependency resolution, conflict/override semantics and import UX are still open design questions, not established implementation.
+- Future settings can supply their own JSON without duplicating or modifying Saga's core application. Reusable compatible homebrew packages may be combined across settings.
