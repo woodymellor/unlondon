@@ -77,3 +77,25 @@ These entries are navigation aids, not replacements for the detailed source reco
 - **Status:** Active.
 - **Choice:** Keep the original context verbatim in a separate archive; use a shorter context as entry point and distribute durable details into GitHub documents. Existing roadmap, checkpoint and application source are preserved.
 - **Reason:** Improve fresh-chat continuity without losing prior decisions or technical detail.
+
+
+## UL-014 — Separate tool and setting projects
+- **Date:** 2026-09-29
+- **Status:** Agreed; organisational split to be carried out separately.
+- **Choice:** Ironsworn Saga is the generic web-tool project; UnLondon is a separate setting/campaign project owning its worldbuilding, homebrew content and setting-specific house rules. Delphi initially lives with UnLondon; a third project remains optional.
+- **Reason:** Separate software development from creative setting/campaign work without making Saga dependent on one setting.
+- **Consequences:** Saga owns generic implementation and repository; UnLondon owns its setting-specific material.
+
+## UL-015 — JSON content packages
+- **Date:** 2026-09-29
+- **Status:** Agreed architecture; not implemented.
+- **Choice:** Plan a Content Packages page to import/select/enable multiple compatible JSON packages. Classic is required; Delve and custom setting/reusable homebrew packages can coexist. Future settings load their own JSON rather than fork Saga.
+- **Reason:** Reuse the same tool across settings and share compatible custom content.
+- **Consequences:** Design package IDs/versions, validation, dependencies and collision handling. Persist package selection with each campaign and warn about missing requirements.
+
+## UL-016 — Content, rules and campaign-state separation
+- **Date:** 2026-09-29
+- **Status:** Agreed architectural boundary; implementation planned.
+- **Choice:** Keep official RAW, homebrew content and explicit house-rule modifications distinct. JSON supplies declarative content/configuration; Saga implements supported mechanical changes without executing arbitrary imported code. Package definitions remain separate from mutable campaign saves, so multiple campaigns can independently use the same package.
+- **Reason:** Preserve rules provenance, security, portability and campaign independence.
+- **Consequences:** UnLondon rules must not silently become Saga defaults; schema and supported rule-modification capabilities require subsequent design.
