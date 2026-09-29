@@ -286,3 +286,17 @@ These refine existing planned features; they do **not** change implementation st
 - **Quest fog-of-war:** Templates may retain unresolved slots, e.g. a clue leading to a compatible `[industrial]` or `[river]` POI selected only when that stage is reached. Prefer existing compatible POIs while permitting new ones.
 - **Portrait hybrid:** For any external generation path, prove Quest 2 iframe generation and cross-origin `postMessage`; accepted foe data must persist in Saga even if portrait storage is unresolved.
 - **Public edition:** Separate code, content and campaign data; do not embed personal campaign data in the public application.
+
+
+## Setting-independent content packages
+Status: agreed architecture; not implemented. Added 2026-09-29.
+
+- Saga is the reusable, setting-independent application; UnLondon is a separate setting/campaign project. Future settings use their own JSON packages without forking Saga.
+- Provide a **Content Packages** page to import, list, enable and disable JSON packages. Classic remains the required foundation; Delve and compatible custom packages may be enabled together.
+- Distinguish **official content**, **custom setting content** (assets, oracles, creatures, equipment, etc.) and **house rules** that modify core mechanics. Keep official RAW unchanged; mechanical overrides require explicit, supported application behaviour, not executable JavaScript in JSON.
+- Packages may declare identifiers, versions and dependencies. Validate compatibility and warn about missing required packages; avoid silent content collisions.
+- Persist the selected package IDs/versions with each campaign and restore that selection when loading; warn rather than silently substituting missing content.
+- **Package ≠ campaign save:** packages define reusable content and supported rules/configuration; saves hold characters, progress, discoveries, Chronicle and other mutable campaign state. Multiple campaigns can use the same package independently.
+- Support multiple compatible packages simultaneously, including reusable homebrew across settings. Exact JSON schema, merge/override policy and UI details remain to be designed.
+- Keep UnLondon-specific JSON and worldbuilding in the separate UnLondon project; Saga owns the generic importer, validation, package management and supported rules mechanisms.
+- Delphi initially belongs with UnLondon as its setting-aware voice assistant; reconsider a separate Delphi project if it becomes reusable across settings.
