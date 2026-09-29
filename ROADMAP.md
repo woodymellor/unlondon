@@ -300,3 +300,16 @@ Status: agreed architecture; not implemented. Added 2026-09-29.
 - Support multiple compatible packages simultaneously, including reusable homebrew across settings. Exact JSON schema, merge/override policy and UI details remain to be designed.
 - Keep UnLondon-specific JSON and worldbuilding in the separate UnLondon project; Saga owns the generic importer, validation, package management and supported rules mechanisms.
 - Delphi initially belongs with UnLondon as its setting-aware voice assistant; reconsider a separate Delphi project if it becomes reusable across settings.
+
+
+## UnLondon open-world postcode Locations — agreed 2026-09-29
+Status: **setting-specific design / prototype; not implemented in stable Saga.** Keep separate from the generic Classic + Delve foundation and from the pre-existing generic Persistent Interiors roadmap above.
+
+- Model real London postcode districts as persistent **open-world areas**, inspired by Elden Ring's distinction between open regions and self-contained dungeons. Districts are not automatically Delve sites and have no compulsory Delve progress track or objective.
+- Save each district's established population of ordinary enemies, unique foes/bosses, loot, discoveries, NPCs, checkpoints and named locations. Do not require tracking precise positions of every roaming enemy.
+- On rest or death, restore designated respawnable ordinary enemies to their established population; preserve defeated unique bosses, collected unique loot and other permanent changes. Exact encounter/respawn rules remain subject to playtesting.
+- Add named locations within districts. A location may be a point of interest, combat encounter, merchant, quest location, Site of Grace/checkpoint or **optional Delve site**. Districts may contain zero or multiple Delve sites; players can explore the district without clearing them.
+- For an individual dungeon/expedition, use existing Delve site theme, domain, rank, progress, exploration moves and objective as appropriate. Keep Delve's mechanics and UI in the generic Saga/Delve feature, not hardwired into the postcode system.
+- Use the existing Knowledge Dashboard in a **separate browser window** as the geographic map. Do not clone its map, import its postcode geometry or require any communication with Saga. A simple current-postcode selector is sufficient.
+- Prototype next step, when requested: return to the original standalone Locations mock-up and add a list of named places under each district, with an optional Delve-site reference. The combined Locations + Delve mock-up is exploratory, not the target architecture.
+- Preserve package/save separation: UnLondon-specific world definitions and configuration belong to the setting; mutable district, location, enemy and discovery state belong to the campaign save. Do not modify stable `index.html` until a coherent feature is ready for user testing.
