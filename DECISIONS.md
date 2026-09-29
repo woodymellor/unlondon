@@ -99,3 +99,25 @@ These entries are navigation aids, not replacements for the detailed source reco
 - **Choice:** Keep official RAW, homebrew content and explicit house-rule modifications distinct. JSON supplies declarative content/configuration; Saga implements supported mechanical changes without executing arbitrary imported code. Package definitions remain separate from mutable campaign saves, so multiple campaigns can independently use the same package.
 - **Reason:** Preserve rules provenance, security, portability and campaign independence.
 - **Consequences:** UnLondon rules must not silently become Saga defaults; schema and supported rule-modification capabilities require subsequent design.
+
+
+## UL-017 — Postcode districts are open-world areas, not Delve sites
+- **Date:** 2026-09-29
+- **Status:** Agreed design; not implemented in stable Saga.
+- **Choice:** Treat London postcode districts as persistent open-world regions with saved enemy populations, NPCs, loot, discoveries and checkpoints. Ordinary enemies may respawn on rest/death; unique boss defeats and unique loot collection persist. Do not require precise enemy positions or give each district a compulsory Delve progress track.
+- **Reason:** Support free exploration and Souls/Elden Ring-style persistence without forcing a whole postcode district into a single dungeon expedition.
+- **Consequences:** Add named locations within districts; a district may have zero or several self-contained dungeons. Exact gameplay rules remain to be playtested.
+
+## UL-018 — Delve sites remain optional, self-contained locations
+- **Date:** 2026-09-29
+- **Status:** Agreed design; not implemented in stable Saga.
+- **Choice:** Use existing Delve mechanics for appropriate individual locations inside open-world districts. Keep generic Classic + Delve Saga setting-independent; do not merge Delve's site progress or exploration rules into every postcode district.
+- **Reason:** Preserve the distinction between open-world exploration and structured site expeditions, and avoid reinventing or duplicating Delve.
+- **Consequences:** Return to the original Locations prototype as the conceptual foundation and add named places with optional Delve-site links. The combined Locations + Delve prototype is exploratory, not the intended integrated architecture.
+
+## UL-019 — Existing Knowledge Dashboard remains an external map
+- **Date:** 2026-09-29
+- **Status:** Agreed for the experimental UnLondon workflow.
+- **Choice:** Use the existing Knowledge Dashboard in a separate browser window; do not reproduce it or integrate it with Saga. Select the current postcode district manually in Saga.
+- **Reason:** Reuse the working map and avoid unnecessary duplication and integration work.
+- **Consequences:** The London Locations system requires persistent district state and a postcode selector, not a map engine or imported geographic boundaries.
